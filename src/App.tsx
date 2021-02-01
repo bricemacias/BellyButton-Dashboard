@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { gql, useQuery } from '@apollo/client';
 import logo from './logo.svg';
 import './App.css';
 
+const GET_USERS = gql`
+  query Users {
+    allUsers(role: MEMBER) {
+      data {
+        name
+      }
+    }
+  }
+`;
+
 function App() {
+  const { loading, error, data } = useQuery(GET_USERS);
+  useEffect(() => {
+    console.log(data);
+  }, [data, loading, error]);
+
   return (
     <div className="App">
       <header className="App-header">
