@@ -8,15 +8,14 @@ import authReducer from '../logic/auth/authReducer';
 import { VERIFY_AUTH } from '../graphql/auth';
 
 import MainApp from '../app/Test';
+import Loading from '../components/Loading';
 import RootRoutes from './RootRoutes';
 
 const VerifyTokenRoute = () => {
   const dispatch = useDispatch();
   const updateToken = authReducer.updateToken;
   const [verifyAuth] = useMutation(VERIFY_AUTH);
-  const [redirectComponent, setRedirectComponent] = useState(
-    <div>Checking Token</div>
-  );
+  const [redirectComponent, setRedirectComponent] = useState(<Loading />);
 
   useEffect(() => {
     const handleVerify = async () => {

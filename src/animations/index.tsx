@@ -74,3 +74,18 @@ export const Opacity = (props: DurationOpacityProps) => {
     </motion.div>
   );
 };
+
+export const UpAndDown = (props: any) => {
+  return (
+    <motion.div
+      initial={{ y: 0 }}
+      animate={{ y: [4, 0, 4] }}
+      transition={{
+        repeat: Infinity,
+        type: 'tween',
+      }}
+    >
+      {props.children}
+    </motion.div>
+  );
+};
