@@ -1,33 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import RootRoutes from './routes/RootRoutes';
 import reportWebVitals from './reportWebVitals';
 
 import theme from './styles/theme';
 import { ThemeProvider } from 'styled-components';
 
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { Provider } from 'react-redux';
 
-const API_URL = process.env.REACT_APP_API_URL;
-const API_GUEST_KEY = process.env.REACT_APP_API_KEY;
-const cache = new InMemoryCache();
+import { ToastProvider } from 'react-toast-notifications';
 
-const client = new ApolloClient({
-  uri: API_URL,
-  cache: cache,
-  headers: {
-    authorization: `Bearer ${API_GUEST_KEY}`,
-  },
-});
+import store from './logic/store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <ToastProvider>
+          <RootRoutes />
+        </ToastProvider>
       </ThemeProvider>
-    </ApolloProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
