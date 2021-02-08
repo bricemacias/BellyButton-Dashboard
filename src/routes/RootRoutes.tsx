@@ -8,9 +8,10 @@ import { GlobalStyle } from '../styles/GlobalStyles';
 import { ApolloProvider } from '@apollo/client';
 
 import VerifyTokenRoute from './VerifyTokenRoute';
-import LoginApp from '../auth/Test';
+import LoginApp from '../auth/Login';
 
 import ClientCreator from '../components/utils/ClientCreator';
+import ScrollToTop from '../components/ScrollToTop';
 
 const RootRoutes = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -31,28 +32,30 @@ const RootRoutes = () => {
   return (
     <Router>
       <GlobalStyle />
-      <Switch>
-        {localClient && token && token !== '' ? (
-          <Route
-            exact
-            render={() => (
-              <ApolloProvider client={localClient}>
-                <VerifyTokenRoute />
-              </ApolloProvider>
-            )}
-          ></Route>
-        ) : (
-          <Route
-            exact
-            render={() => (
-              <ApolloProvider client={guestClient}>
-                {' '}
-                <LoginApp />{' '}
-              </ApolloProvider>
-            )}
-          ></Route>
-        )}
-      </Switch>
+      <ScrollToTop>
+        <Switch>
+          {localClient && token && token !== '' ? (
+            <Route
+              exact
+              render={() => (
+                <ApolloProvider client={localClient}>
+                  <VerifyTokenRoute />
+                </ApolloProvider>
+              )}
+            ></Route>
+          ) : (
+            <Route
+              exact
+              render={() => (
+                <ApolloProvider client={guestClient}>
+                  {' '}
+                  <LoginApp />{' '}
+                </ApolloProvider>
+              )}
+            ></Route>
+          )}
+        </Switch>
+      </ScrollToTop>
     </Router>
   );
 };

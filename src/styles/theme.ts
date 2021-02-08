@@ -8,7 +8,7 @@ const theme = {
       light: '300',
       normal: '400',
       semi: '500',
-      bold: '700'
+      bold: '700',
     },
     size: {
       tiny: '1.1rem',
@@ -17,8 +17,8 @@ const theme = {
       sm: '1.6rem',
       md: '1.8rem',
       lg: '2.0rem',
-      xl: '3.4rem'
-    }
+      xl: '3.4rem',
+    },
   },
 
   /**
@@ -31,44 +31,53 @@ const theme = {
     body: '#fcfbfe',
 
     primary: {
+      light: '#efdde6',
+      main: '#b2c4e3',
+    },
+
+    secondary: {
+      main: '#fdc8b5',
+    },
+
+    tertiary: {
+      main: '#784af4',
+    },
+
+    blue: {
       light: '#dae9f4',
       main: '#7f9eb2',
       dark: '#274c5e',
       lighterdark: '#3D7794',
       lighterdark1: '#4587A8',
-      contrastText: '#fff'
+      contrastText: '#fff',
     },
 
-    secondary: {
+    pink: {
       light: '#ff4081',
       lightbis: '#ff3366',
       main: '#eb2f64',
       dark: '#ba265d',
-      contrastText: '#fff'
-    },
-
-    tertiary: {
-      main: '#784af4'
+      contrastText: '#fff',
     },
 
     text: {
       primary: 'rgba(0, 0, 0, 0.87)',
       secondary: 'rgba(0, 0, 0, 0.54)',
       disabled: 'rgba(0, 0, 0, 0.38)',
-      hint: 'rgba(0, 0, 0, 0.38)'
+      hint: 'rgba(0, 0, 0, 0.38)',
     },
 
     border: {
       light: '#f5f5f5',
       main: '#e0e0e0',
-      dark: '#bdbdbd'
+      dark: '#bdbdbd',
     },
 
     error: {
       light: '#e57373',
       main: '#f44336',
       dark: '#d32f2f',
-      contrastText: '#fff'
+      contrastText: '#fff',
     },
 
     warning: '#FFB818',
@@ -93,8 +102,8 @@ const theme = {
       lightbis: '#eaeaf0',
       dark1: '#333',
       dark2: '#777',
-      dark3: '#999'
-    }
+      dark3: '#999',
+    },
   },
 
   /**
@@ -106,7 +115,7 @@ const theme = {
     lg: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
     xl: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
     light: '0 1rem 2rem rgba(0, 0, 0, 0.3)',
-    dark: '0 2rem 6rem rgba(0, 0, 0, 0.3)'
+    dark: '0 2rem 6rem rgba(0, 0, 0, 0.3)',
   },
 
   /**
@@ -126,7 +135,7 @@ const theme = {
     small: '37.5em', // 600px
     smallest: '31.25em', //500px
     smallest400: '25em', //400px
-    smallest292: '18.25em' //292px
+    smallest292: '18.25em', //292px
   },
 
   /**
@@ -139,7 +148,7 @@ const theme = {
     sm: '2rem',
     md: '3rem',
     lg: '4rem',
-    xl: '6rem'
+    xl: '6rem',
   },
 
   /**
@@ -148,7 +157,7 @@ const theme = {
   radius: {
     sm: '0.3rem',
     md: '0.6rem',
-    lg: '1.2rem'
+    lg: '1.2rem',
   },
 
   /**
@@ -159,8 +168,8 @@ const theme = {
     sm: 20,
     md: 30,
     lg: 40,
-    xl: 50
-  }
+    xl: 50,
+  },
 };
 
 export default theme;
