@@ -12,7 +12,7 @@ import AppRoutes from '../../routes/AppRoutes';
 import { OpacityScaleMain } from '../../animations';
 
 import { useWindowSize } from '../../hooks/useWindowSize';
-import { useClickOutside } from '../../hooks/useClickOutside';
+import { useClickOnElement } from '../../hooks/useClickOnElement';
 
 const Dashboard = () => {
   const [welcome, setWelcome] = useState(true);
@@ -21,6 +21,8 @@ const Dashboard = () => {
   const windowSize = useWindowSize();
 
   const sideBarRef = useRef('');
+
+  const burgerRef = useRef('');
 
   const setOpen = () => {
     setOpenState(!open);
@@ -32,18 +34,26 @@ const Dashboard = () => {
     }, 5000);
   }, []);
 
-  useClickOutside(sideBarRef, () => {
-    if (windowSize.width && windowSize.width <= parseInt('716px', 10) && open) {
-      setOpenState(false);
-    }
-  });
+  useClickOnElement(
+    sideBarRef,
+    () => {
+      if (
+        windowSize.width &&
+        windowSize.width <= parseInt('716px', 10) &&
+        open
+      ) {
+        setOpen();
+      }
+    },
+    true
+  );
 
   return (
     <OpacityScaleMain>
       <Container>
         <Sidebar open={open} sideBarRef={sideBarRef} width={windowSize.width} />
         <Content>
-          <Header open={open} setOpen={setOpen} />
+          <Header open={open} setOpen={setOpen} burgerRef={burgerRef} />
           <MainContent>
             <MainView>{welcome ? <Welcome /> : <AppRoutes />}</MainView>
           </MainContent>

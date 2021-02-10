@@ -22,7 +22,7 @@ import { Header as HeaderLayout } from '../../../styles/layout';
 import Search from '../../../components/Search';
 import Burger from '../../../components/Burger';
 
-const Header = ({ history, setOpen, open }: any) => {
+const Header = ({ history, setOpen, open, burgerRef }: any) => {
   const updateToken = authReducer.updateToken;
   const dispatch = useDispatch();
 
@@ -36,7 +36,7 @@ const Header = ({ history, setOpen, open }: any) => {
   return (
     <>
       <HeaderLayout>
-        <Burger open={open} setOpen={setOpen} />
+        <Burger open={open} setOpen={setOpen} ref={burgerRef} />
         <Search />
         <UserNav>
           <UserNavIconBox>
