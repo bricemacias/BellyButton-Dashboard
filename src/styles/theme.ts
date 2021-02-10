@@ -37,10 +37,16 @@ const theme = {
 
     secondary: {
       main: '#fdc8b5',
+      blue: '#c7d2e5',
+      pink: '#dedeee',
     },
 
     tertiary: {
       main: '#784af4',
+      strong1: '#432d9c',
+      strong2: '#2c34ac',
+      strong3: '#2736af',
+      dark: '#312e5c',
     },
 
     blue: {

@@ -112,7 +112,7 @@ const Button = styled.button`
 
 // Component
 
-const SigninInfluencer = (props: any) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginUser, { loading, error }] = useMutation(LOGIN);
@@ -200,4 +200,4 @@ const SigninInfluencer = (props: any) => {
   );
 };
 
-export default withRouter(SigninInfluencer);
+export default withRouter(Login);
