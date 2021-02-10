@@ -7,22 +7,23 @@ import authReducer from '../logic/auth/authReducer';
 
 import { VERIFY_AUTH } from '../graphql/auth';
 
-import MainApp from '../app/Test';
+import Dashboard from '../app/dashboard/Dashboard';
+import Loading from '../components/Loading';
 import RootRoutes from './RootRoutes';
 
 const VerifyTokenRoute = () => {
   const dispatch = useDispatch();
   const updateToken = authReducer.updateToken;
   const [verifyAuth] = useMutation(VERIFY_AUTH);
-  const [redirectComponent, setRedirectComponent] = useState(
-    <div>Checking Token</div>
-  );
+  const [redirectComponent, setRedirectComponent] = useState(<Loading />);
 
   useEffect(() => {
     const handleVerify = async () => {
       try {
         await verifyAuth();
-        setRedirectComponent(<MainApp />);
+        setTimeout(() => {
+          setRedirectComponent(<Dashboard />);
+        }, 1200);
       } catch (error) {
         console.log('error', error);
         localStorage.removeItem('bellybuttonToken');
