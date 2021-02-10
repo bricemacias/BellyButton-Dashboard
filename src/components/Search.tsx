@@ -64,7 +64,7 @@ export const SearchInput = styled.input`
   }
 `;
 
-export const SearchButton = styled.button`
+export const SearchButton = styled.div`
   border: none;
   background-color: ${(p) => p.theme.colors.grey.light2};
 
