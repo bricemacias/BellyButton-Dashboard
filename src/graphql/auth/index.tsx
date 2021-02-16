@@ -20,4 +20,10 @@ const LOGIN = gql`
   }
 `;
 
-export { VERIFY_AUTH, LOGIN };
+const LOGOUT = gql`
+  mutation Logout($allTokens: Boolean) {
+    logoutUser(data: { allTokens: $allTokens })
+  }
+`;
+
+export { VERIFY_AUTH, LOGIN, LOGOUT };

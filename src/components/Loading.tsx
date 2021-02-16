@@ -41,7 +41,6 @@ const LoadingMessage = styled.p`
 
 const Loading = () => {
   const windowSize = useWindowSize();
-  console.log(windowSize.height);
 
   return (
     <Container height={windowSize.height}>

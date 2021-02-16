@@ -25,15 +25,15 @@ const Welcome = () => {
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
         exit={{ opacity: 0 }}
-        transition={{ delay: 4, duration: 0.7 }}
+        transition={{ delay: 2, duration: 0.7 }}
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ delay: 1.75, duration: 1 }}
+          transition={{ delay: 1, duration: 0.7 }}
         >
-          <Title>Welcome</Title>
+          <Title>Welcome back</Title>
         </motion.div>
       </motion.div>
     </div>

@@ -1,8 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
 import authReducer from './auth/authReducer';
+import talentsReducer from './app/talentsReducer';
 
-const rootReducer = combineReducers({ auth: authReducer.reducer });
+const rootReducer = combineReducers({
+  auth: authReducer.reducer,
+  talents: talentsReducer.reducer,
+});
 
 export type RootState = ReturnType<typeof rootReducer>;
 

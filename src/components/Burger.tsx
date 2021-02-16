@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Burger = ({ open, setOpen, burgerRef }: any) => {
+const Burger = ({ open, setOpen }: any) => {
   return (
-    <StyledBurger open={open} onClick={setOpen} ref={burgerRef}>
+    <StyledBurger open={open} onClick={setOpen}>
       <span>&nbsp;</span>
     </StyledBurger>
   );

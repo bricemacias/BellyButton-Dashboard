@@ -135,7 +135,6 @@ const Login = () => {
         password: password,
       },
     }).then(async ({ data }: any) => {
-      console.log(data);
       localStorage.setItem('bellybuttonToken', data.loginUser.token);
       dispatch(updateToken(data.loginUser.token));
       clearState();
