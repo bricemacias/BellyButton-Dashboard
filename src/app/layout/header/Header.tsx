@@ -7,6 +7,12 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import authReducer from '../../../logic/auth/authReducer';
 
+import { useMutation } from '@apollo/client';
+
+import { LOGOUT } from '../../../graphql/auth';
+
+import { useToasts } from 'react-toast-notifications';
+
 import {
   UserNav,
   UserNavIconBox,
@@ -25,12 +31,20 @@ import Burger from '../../../components/Burger';
 const Header = ({ history, setOpen, open, burgerRef }: any) => {
   const updateToken = authReducer.updateToken;
   const dispatch = useDispatch();
+  const [logoutUser, { loading, error }] = useMutation(LOGOUT);
+
+  const { addToast } = useToasts();
 
   // SIGNOUT FUNCTION TO PUT IN DROPDOWN, NOT HERE !
   const handleSignOut = async () => {
-    localStorage.removeItem('bellybuttonToken');
-    dispatch(updateToken(''));
-    history.push('/');
+    if (!loading && !error) {
+      logoutUser();
+      localStorage.removeItem('bellybuttonToken');
+      dispatch(updateToken(''));
+      history.push('/');
+    } else if (error && error.message) {
+      addToast(error.message, { appearance: 'error', autoDismiss: true });
+    }
   };
 
   return (

@@ -9,7 +9,7 @@ import Analytics from '../app/pages/dashboard/Analytics';
 import HelpCenter from '../app/pages/dashboard/HelpCenter';
 import Settings from '../app/pages/dashboard/Settings';
 
-const InfluencerRoutes = (props: any) => {
+const AppRoutes = (props: any) => {
   return (
     <>
       <Switch>
@@ -46,4 +46,4 @@ const InfluencerRoutes = (props: any) => {
   );
 };
 
-export default InfluencerRoutes;
+export default AppRoutes;

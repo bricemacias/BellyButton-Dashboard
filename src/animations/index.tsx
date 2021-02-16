@@ -2,17 +2,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface SimpleAnimationProps {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
 interface AnimationWithDurationProps {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   duration: Number;
 }
 
 export const OpacityScaleFull = (props: SimpleAnimationProps) => {
   return (
     <motion.div
+      style={{
+        display: 'flex',
+        flex: '1',
+      }}
       initial={{ opacity: 0, scale: 0.7 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
@@ -39,6 +43,10 @@ export const OpacityScaleMedium = (props: SimpleAnimationProps) => {
 export const OpacityScaleMain = (props: SimpleAnimationProps) => {
   return (
     <motion.div
+      style={{
+        display: 'flex',
+        flex: '1',
+      }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
@@ -52,6 +60,10 @@ export const OpacityScaleMain = (props: SimpleAnimationProps) => {
 export const OpacityDelayStepper = (props: SimpleAnimationProps) => {
   return (
     <motion.div
+      style={{
+        display: 'flex',
+        flex: '1',
+      }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
@@ -65,6 +77,10 @@ export const OpacityDelayStepper = (props: SimpleAnimationProps) => {
 export const Opacity = (props: AnimationWithDurationProps) => {
   return (
     <motion.div
+      // style={{
+      //   display: 'flex',
+      //   flex: '1',
+      // }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -78,6 +94,10 @@ export const Opacity = (props: AnimationWithDurationProps) => {
 export const UpAndDown = (props: SimpleAnimationProps) => {
   return (
     <motion.div
+      style={{
+        display: 'flex',
+        flex: '1',
+      }}
       initial={{ y: 0 }}
       animate={{ y: [4, 0, 4] }}
       transition={{

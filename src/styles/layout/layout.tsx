@@ -143,15 +143,19 @@ export const MainContent = styled.div`
   }
 `;
 
-export const MainView = styled.main`
-  background-color: #fff;
+export const MainView = styled.main<any>`
+  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   border-bottom-right-radius: 10px;
+  flex: 1;
+
+  @media (min-width: ${(p) => p.theme.screen.largest}) {
+    height: 539px;
+    width: 1016px;
+  }
   /* TEST
   background-color: orangered;
   height: 80rem; */
-
-  flex: 1;
 `;

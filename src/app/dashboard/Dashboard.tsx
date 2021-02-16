@@ -2,6 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { Container, Content, MainContent, MainView } from '../../styles/layout';
 
+import { RootState } from '../../logic/store';
+import { ALL_TALENTS } from '../../graphql/app/index';
+import talentsReducer from '../../logic/app/talentsReducer';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from '@apollo/client';
+
 import Header from '../layout/header/Header';
 import { Sidebar } from '../layout/sidebar/Sidebar';
 
@@ -17,12 +24,32 @@ import { useClickOnElement } from '../../hooks/useClickOnElement';
 const Dashboard = () => {
   const [welcome, setWelcome] = useState(true);
   const [open, setOpenState] = useState(false);
+  const [mainviewDimensions, setMainviewDimensions] = useState({});
 
   const windowSize = useWindowSize();
 
   const sideBarRef = useRef('');
 
-  const burgerRef = useRef('');
+  const mainviewRef = useRef(null);
+
+  const talents = useSelector((state: RootState) => state.talents.data);
+  const dispatch = useDispatch();
+  const updateTalents = talentsReducer.updateTalents;
+  const { data, loading, error } = useQuery(ALL_TALENTS);
+
+  useEffect(() => {
+    if (data && data.allTalents && data.allTalents.data) {
+      dispatch(updateTalents(data.allTalents.data));
+    }
+    return () => {
+      dispatch(updateTalents([]));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, error]);
+
+  useEffect(() => {
+    console.log(talents);
+  }, [talents]);
 
   const setOpen = () => {
     setOpenState(!open);
@@ -31,7 +58,7 @@ const Dashboard = () => {
   useEffect(() => {
     setTimeout(function () {
       setWelcome(false);
-    }, 5000);
+    }, 2500);
   }, []);
 
   useClickOnElement(
@@ -48,14 +75,35 @@ const Dashboard = () => {
     true
   );
 
+  useEffect(() => {
+    if (mainviewRef.current) {
+      //@ts-ignore
+      setMainviewDimensions({
+        //@ts-ignore
+        height: mainviewRef.current.offsetHeight,
+        //@ts-ignore
+        width: mainviewRef.current.offsetWidth,
+      });
+    }
+  }, [windowSize.width]);
+
   return (
     <OpacityScaleMain>
       <Container>
         <Sidebar open={open} sideBarRef={sideBarRef} width={windowSize.width} />
         <Content>
-          <Header open={open} setOpen={setOpen} burgerRef={burgerRef} />
+          <Header open={open} setOpen={setOpen} />
           <MainContent>
-            <MainView>{welcome ? <Welcome /> : <AppRoutes />}</MainView>
+            <MainView ref={mainviewRef}>
+              {welcome ? (
+                <Welcome />
+              ) : (
+                <AppRoutes
+                  mainviewDimensions={mainviewDimensions}
+                  windowSize={windowSize}
+                />
+              )}
+            </MainView>
           </MainContent>
         </Content>
       </Container>
