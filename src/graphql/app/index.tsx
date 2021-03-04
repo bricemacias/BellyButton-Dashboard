@@ -48,6 +48,7 @@ const ALL_TALENTS = gql`
         }
         youtube {
           link
+          channelId
         }
         instagram {
           link
@@ -64,4 +65,34 @@ const ALL_TALENTS = gql`
   }
 `;
 
-export { GET_USERS, ALL_TALENTS };
+// Mutations
+const UPDATE_TALENT_SUBSCRIBERS = gql`
+  mutation UpdateTalentSubscribers(
+    $id: ID!
+    $name: String!
+    $value: Int
+    $date: Date
+    $subscribers: [SubscribersInput]
+  ) {
+    updateTalent(
+      id: $id
+      data: {
+        name: $name
+        mostRecentSubscribers: { value: $value, date: $date }
+        subscribers: $subscribers
+      }
+    ) {
+      name
+      mostRecentSubscribers {
+        value
+        date
+      }
+      subscribers {
+        value
+        date
+      }
+    }
+  }
+`;
+
+export { GET_USERS, ALL_TALENTS, UPDATE_TALENT_SUBSCRIBERS };

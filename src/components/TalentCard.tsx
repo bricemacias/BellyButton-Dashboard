@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import icons from '../assets/sprite.svg';
 import { DomainIcons } from '../components/utils/DomainIcons';
+
+import { DateTime } from 'luxon';
+
+import { UPDATE_TALENT_SUBSCRIBERS } from '../graphql/app';
+import { useMutation } from '@apollo/client';
+
+import { useToasts } from 'react-toast-notifications';
 
 const CardContainer = styled.div`
   display: flex;
@@ -136,12 +143,59 @@ const TitleElement = styled.div`
   color: ${(p) => p.theme.colors.primary.main};
 `;
 const ContentElement = styled.div`
+  transition: all 1s;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 40px;
   width: 50%;
   padding-left: 20px;
+`;
+
+const UpdateIndicator = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const UpdateIndicatorIcon = styled.svg<any>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  z-index: 2000;
+  fill: ${(p) =>
+    p.subscribersCount && p.updatedSubscribers
+      ? p.theme.colors.success
+      : p.loading
+      ? p.theme.colors.warning
+      : p.theme.colors.error.main};
+`;
+
+const EvolutionIndicator = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 10px;
+`;
+
+const EvolutionIndicatorIcon = styled.svg<any>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${(p) =>
+    p.SubscribersEvolutionCondition === 'same' ? '10px' : '18px'};
+  height: ${(p) =>
+    p.SubscribersEvolutionCondition === 'same' ? '10px' : '18px'};
+  z-index: 2000;
+  fill: ${(p) =>
+    p.SubscribersEvolutionCondition === 'up'
+      ? p.theme.colors.success
+      : p.SubscribersEvolutionCondition === 'same'
+      ? p.theme.colors.info
+      : p.theme.colors.error.main};
 `;
 
 const Button = styled.button`
@@ -168,10 +222,165 @@ const Button = styled.button`
 `;
 
 const TalentCard = (props: any) => {
+  const { addToast } = useToasts();
+  const [updateTalentSubscribers, { loading, error }] = useMutation(
+    UPDATE_TALENT_SUBSCRIBERS
+  );
+  const [subscribersCount, setSubscribersCount] = useState<Number>(
+    props.data &&
+      props.data.mostRecentSubscribers &&
+      props.data.mostRecentSubscribers.value &&
+      props.data.mostRecentSubscribers.value
+  );
+
+  const NowTime = DateTime.now();
+
+  const checkMonthSubscribers = props.data.subscribers
+    //@ts-ignore
+    .some((el) => {
+      return DateTime.fromISO(el.date).hasSame(NowTime, 'month');
+    });
+
+  const [updatedSubscribers, setUpdatedSubscribers] = useState<Boolean>(
+    checkMonthSubscribers
+  );
+
+  const SubscribersEvolutionCondition = checkMonthSubscribers
+    ? props.data.mostRecentSubscribers.value > props.data.subscribers[1].value
+      ? 'up'
+      : props.data.mostRecentSubscribers.value ===
+        props.data.subscribers[1].value
+      ? 'same'
+      : 'down'
+    : subscribersCount > props.data.subscribers[0].value
+    ? 'up'
+    : subscribersCount === props.data.subscribers[0].value
+    ? 'same'
+    : 'down';
+
+  // TODO: subscribers useState boolean
+  // TODO: v30 useState boolean
+  // TODO: v30count useState int, updates when modal update
+  // TODO: Fauna, make all dates coherent between most recent and all subscribers and V30, changing them to january, adding february in the middle and for more recent, and test the program for march to see if it updates both all and most recent subscribers
+
   const openInNewTab = (url: any) => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
   };
+
+  const youtubeApiKey = process.env.REACT_APP_YOUTUBE_API_KEY;
+
+  useEffect(() => {
+    const fetchSubscribers = async () => {
+      let url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${props.data.youtube.channelId}&key=${youtubeApiKey}`;
+      try {
+        const fetching = await fetch(url);
+        try {
+          const result = await fetching.json();
+          if (
+            result &&
+            result.pageInfo &&
+            result.pageInfo.totalResults &&
+            result.pageInfo.totalResults === 1
+          ) {
+            if (
+              result &&
+              result.items &&
+              result.items[0].statistics.subscriberCount
+            ) {
+              console.log(
+                `${props.data.name} ${
+                  result &&
+                  result.items &&
+                  result.items[0].statistics.subscriberCount
+                }`
+              );
+              try {
+                await updateTalentSubscribers({
+                  variables: {
+                    id: props.data._id,
+                    name: props.data.name,
+                    value: parseInt(
+                      result &&
+                        result.items &&
+                        result.items[0].statistics.subscriberCount
+                    ),
+                    date: NowTime.toISODate(),
+                    subscribers: [
+                      {
+                        value: parseInt(
+                          result &&
+                            result.items &&
+                            result.items[0].statistics.subscriberCount
+                        ),
+                        date: NowTime.toISODate(),
+                      },
+                    ].concat(
+                      //@ts-ignore
+                      props.data.subscribers.map((el) => {
+                        return { value: el.value, date: el.date };
+                      })
+                    ),
+                  },
+                }).then((result) => {
+                  setSubscribersCount(
+                    result.data.updateTalent.mostRecentSubscribers.value
+                  );
+                  setUpdatedSubscribers(true);
+                });
+                if (error) {
+                  addToast('GraphQL error in Update Talent Subscribers', {
+                    appearance: 'error',
+                    autoDismiss: true,
+                  });
+                  console.log(`GraphQL error : ${error.message}`);
+                }
+              } catch (error) {
+                addToast('GraphQL error in Update Talent Subscribers', {
+                  appearance: 'error',
+                  autoDismiss: true,
+                });
+                console.log(`GraphQL error : ${error.message}`);
+              }
+            } else {
+              addToast(
+                `Youtube API warning : no subscribers count found for ${props.data.name}`,
+                {
+                  appearance: 'warning',
+                  autoDismiss: true,
+                }
+              );
+            }
+          } else if (result && result.error) {
+            addToast(`Youtube API error : ${result.error.message}`, {
+              appearance: 'error',
+              autoDismiss: true,
+            });
+          } else {
+            addToast(
+              `Could not resolve Youtube API for ${props.data.name}, please check Channel Id is correct`,
+              {
+                appearance: 'warning',
+                autoDismiss: true,
+              }
+            );
+          }
+        } catch (error) {
+          addToast(`Error in Youtube API for ${props.data.name}`, {
+            appearance: 'error',
+            autoDismiss: true,
+          });
+        }
+      } catch (error) {
+        addToast(`Error fetching Youtube API for ${props.data.name}`, {
+          appearance: 'error',
+          autoDismiss: true,
+        });
+      }
+    };
+    if (!checkMonthSubscribers) fetchSubscribers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <CardContainer>
@@ -194,6 +403,8 @@ const TalentCard = (props: any) => {
             </PlatformIcon>
           </Platform>
         </AvatarSection>
+        {/* // TODO : if subscribers, show subscribers component, if v30, show v30
+        // TODO : component, if !subscribers et !v30, show normal (below) */}
         <Name>{props.data && props.data.name && props.data.name}</Name>
         <Domain>
           {props.data &&
@@ -203,21 +414,59 @@ const TalentCard = (props: any) => {
         <InformationSection>
           <Row>
             <TitleElement>Subscribers</TitleElement>
+            {/* // TODO: onclick subscribers true */}
             <ContentElement>
-              {props.data &&
-                props.data.mostRecentSubscribers &&
-                props.data.mostRecentSubscribers.value &&
-                props.data.mostRecentSubscribers.value}
+              {loading ? '...' : subscribersCount}
+              <EvolutionIndicator>
+                {!loading && (
+                  <EvolutionIndicatorIcon
+                    SubscribersEvolutionCondition={
+                      SubscribersEvolutionCondition
+                    }
+                  >
+                    {' '}
+                    <use
+                      xlinkHref={
+                        SubscribersEvolutionCondition === 'up'
+                          ? `${icons}#triangle-up`
+                          : SubscribersEvolutionCondition === 'same'
+                          ? `${icons}#controller-record`
+                          : `${icons}#triangle-down`
+                      }
+                    />
+                  </EvolutionIndicatorIcon>
+                )}
+              </EvolutionIndicator>
+              <UpdateIndicator>
+                <UpdateIndicatorIcon
+                  subscribersCount={subscribersCount}
+                  updatedSubscribers={updatedSubscribers}
+                  loading={loading}
+                >
+                  <use
+                    xlinkHref={
+                      subscribersCount && updatedSubscribers
+                        ? `${icons}#check`
+                        : loading
+                        ? `${icons}#hour-glass`
+                        : `${icons}#cross`
+                    }
+                  />
+                </UpdateIndicatorIcon>
+              </UpdateIndicator>
             </ContentElement>
           </Row>
           <Row>
             <TitleElement>V30</TitleElement>
+            {/* // TODO: onclick v30 true */}
             <ContentElement>
               {props.data &&
                 props.data.mostRecentV30 &&
                 props.data.mostRecentV30.value &&
                 props.data.mostRecentV30.value}
             </ContentElement>
+            {/* // TODO : put exclamation warning to see if subscribers has not been actualized during the month. put check mark if it has been updated */}
+            {/* // TODO : put circle, up or down arrow depending on if the value of tha actual month is the same, bigger or smaller than before */}
           </Row>
           <Row>
             <TitleElement>Price</TitleElement>

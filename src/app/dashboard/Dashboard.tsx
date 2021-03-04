@@ -1,3 +1,5 @@
+// TODO : REFACTOR -> Components for each page, especially for Talent (TalentCard, Subscribers, V30), auth in app, dashboard out, routes in app
+
 import React, { useState, useEffect, useRef } from 'react';
 
 import { Container, Content, MainContent, MainView } from '../../styles/layout';
