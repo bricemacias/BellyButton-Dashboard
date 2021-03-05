@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ReactSVG } from 'react-svg';
 
 export const UserNav = styled.nav`
   align-self: stretch;
@@ -35,7 +36,7 @@ export const UserNavIconBox = styled.div`
   }
 `;
 
-export const UserNavIcon = styled.svg`
+export const UserNavIcon = styled(ReactSVG)`
   height: 2.25rem;
   width: 2.25rem;
   transition: all 0.5s;

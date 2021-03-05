@@ -14,15 +14,15 @@ import { ToastProvider } from 'react-toast-notifications';
 import store from './logic/store';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ToastProvider>
+  <ToastProvider>
+    <React.StrictMode>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
           <RootRoutes />
-        </ToastProvider>
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>,
+        </ThemeProvider>
+      </Provider>
+    </React.StrictMode>
+  </ToastProvider>,
   document.getElementById('root')
 );
 

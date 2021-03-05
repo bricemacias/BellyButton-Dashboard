@@ -1,7 +1,7 @@
 import React from 'react';
 
 import user from '../../../assets/user-6.jpg';
-import icons from '../../../assets/sprite.svg';
+import bellSvg from '../../../assets/SVG/bell.svg';
 
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -54,17 +54,13 @@ const Header = ({ history, setOpen, open, burgerRef }: any) => {
         <Search />
         <UserNav>
           <UserNavIconBox>
-            <UserNavIcon>
-              <use xlinkHref={`${icons}#icon-bell`} />
-            </UserNavIcon>
+            <UserNavIcon src={bellSvg} />
             <UserNavNotification>7</UserNavNotification>
           </UserNavIconBox>
-          <UserNavIconBox>
-            <UserNavIcon>
-              <use xlinkHref={`${icons}#icon-bubbles2`} />
-            </UserNavIcon>
+          {/* <UserNavIconBox>
+            <UserNavIcon src={bubbleSvg}>
             <UserNavNotification>13</UserNavNotification>
-          </UserNavIconBox>
+          </UserNavIconBox> */}
           <UserNavUser onClick={handleSignOut}>
             <UserNavUserPhoto src={user} alt="User photo" />
             <UserNavUserName>Sarah</UserNavUserName>

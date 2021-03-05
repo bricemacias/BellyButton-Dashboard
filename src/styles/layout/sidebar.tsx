@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ReactSVG } from 'react-svg';
 import { NavLink } from 'react-router-dom';
 
 export const LogoTitle = styled.h1`
@@ -82,7 +83,7 @@ export const SideNavLink = styled(NavLink)`
   }
 `;
 
-export const SideNavIcon = styled.svg`
+export const SideNavIcon = styled(ReactSVG)`
   z-index: 100;
   width: 1.75rem;
   height: 1.75rem;
