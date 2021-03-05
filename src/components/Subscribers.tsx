@@ -175,7 +175,12 @@ const Subscribers = (props: any) => {
     scales: {
       xAxes: [
         {
-          ticks: { display: true, autoSkip: true, maxTicksLimit: 4 },
+          ticks: {
+            display: true,
+            autoSkip: true,
+            maxTicksLimit: 4,
+            fontSize: 8,
+          },
           gridLines: {
             display: false,
             drawBorder: false,
@@ -184,7 +189,12 @@ const Subscribers = (props: any) => {
       ],
       yAxes: [
         {
-          ticks: { display: false, autoSkip: true, maxTicksLimit: 3 },
+          ticks: {
+            display: true,
+            autoSkip: true,
+            maxTicksLimit: 3,
+            fontSize: 7,
+          },
           gridLines: {
             display: true,
             drawBorder: false,
