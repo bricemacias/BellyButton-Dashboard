@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import icons from '../../../assets/sprite.svg';
+import questionSvg from '../../../assets/SVG/question.svg';
+import cogSvg from '../../../assets/SVG/cog.svg';
 
 import {
   Sidebar as SidebarLayout,
@@ -56,17 +57,13 @@ export const Sidebar = ({ open, sideBarRef, width }: any) => {
           <SideNav>
             <SideNavItem>
               <SideNavLink exact to="/HelpCenter">
-                <SideNavIcon>
-                  <use xlinkHref={`${icons}#icon-question`} />
-                </SideNavIcon>
+                <SideNavIcon src={questionSvg} />
                 <SideNavText>Help Center</SideNavText>
               </SideNavLink>
             </SideNavItem>
             <SideNavItem>
               <SideNavLink exact to="/Settings">
-                <SideNavIcon>
-                  <use xlinkHref={`${icons}#icon-cog`} />
-                </SideNavIcon>
+                <SideNavIcon src={cogSvg} />
                 <SideNavText>Settings</SideNavText>
               </SideNavLink>
             </SideNavItem>

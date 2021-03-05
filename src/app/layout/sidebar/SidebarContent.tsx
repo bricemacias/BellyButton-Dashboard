@@ -1,5 +1,9 @@
 import React from 'react';
-import icons from '../../../assets/sprite.svg';
+import starSVG from '../../../assets/SVG/star.svg';
+import listSVG from '../../../assets/SVG/list.svg';
+import shieldSVG from '../../../assets/SVG/shield.svg';
+import badgeSVG from '../../../assets/SVG/badge.svg';
+import barGraphSVG from '../../../assets/SVG/bar-graph.svg';
 
 import {
   SideNav,
@@ -15,42 +19,32 @@ export const SidebarContent = () => {
       <SideNav>
         <SideNavItem>
           <SideNavLink exact to="/">
-            <SideNavIcon>
-              <use xlinkHref={`${icons}#icon-star`} />
-            </SideNavIcon>
+            <SideNavIcon src={starSVG} />
             <SideNavText>Talents</SideNavText>
           </SideNavLink>
         </SideNavItem>
         <SideNavItem>
           <SideNavLink exact to="/Operations">
-            <SideNavIcon>
-              <use xlinkHref={`${icons}#icon-list`} />
-            </SideNavIcon>
+            <SideNavIcon src={listSVG} />
             <SideNavText>Operations</SideNavText>
           </SideNavLink>
         </SideNavItem>
         <SideNavItem>
           <SideNavLink exact to="/Potential">
-            <SideNavIcon>
-              <use xlinkHref={`${icons}#icon-shield`} />
-            </SideNavIcon>
+            <SideNavIcon src={shieldSVG} />
             <SideNavText>Potential</SideNavText>
           </SideNavLink>
         </SideNavItem>
         <SideNavItem>
           <SideNavLink exact to="/Prospects">
-            <SideNavIcon>
-              <use xlinkHref={`${icons}#icon-badge`} />
-            </SideNavIcon>
+            <SideNavIcon src={badgeSVG} />
             <SideNavText>Prospects</SideNavText>
           </SideNavLink>
         </SideNavItem>
         <SideNavItem>
           <SideNavLink exact to="/Analytics">
-            <SideNavIcon>
-              <use xlinkHref={`${icons}#icon-bar-graph`} />
-            </SideNavIcon>
-            <SideNavText>Analitycs</SideNavText>
+            <SideNavIcon src={barGraphSVG} />
+            <SideNavText>Analytics</SideNavText>
           </SideNavLink>
         </SideNavItem>
       </SideNav>
