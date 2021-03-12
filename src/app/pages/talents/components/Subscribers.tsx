@@ -1,7 +1,7 @@
-// TODO: add button to update, if it has already been updated during the month, it will only change the value of the current month. If it has not been updated, it will change the most recent, and add a new element on the total vector for the actual month, and set subscribersCount to new value
 // TODO: add case when there is not enough data, (only one month available), and only take the last 5 months maximum
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { ReactSVG } from 'react-svg';
 import { Line } from '@reactchartjs/react-chart.js';
@@ -90,6 +90,16 @@ const ChartContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: -40px;
+`;
+
+const NewTalent = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  text-align: center;
+  padding: 35px 50px 35px;
+  color: ${(p) => p.theme.colors.secondary.blue};
 `;
 
 interface SubscribersElementProps {
@@ -201,9 +211,20 @@ const Subscribers = (props: any) => {
           )}
         </Update>
       </TopBarContainer>
-      <ChartContainer>
-        <Line type="line" data={data} options={options} />
-      </ChartContainer>
+      {data.labels.length > 1 ? (
+        <ChartContainer>
+          <Line type="line" data={data} options={options} />
+        </ChartContainer>
+      ) : (
+        <NewTalent
+          initial={{ y: '5px' }}
+          animate={{ y: '0px' }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          This Talent has not enough history yet, come back next month 🙂
+        </NewTalent>
+      )}
     </SubscribersContainer>
   );
 };
