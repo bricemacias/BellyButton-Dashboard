@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   const windowSize = useWindowSize();
 
-  const sideBarRef = useRef('');
+  const sideBarRef = useRef<HTMLElement>(null);
 
   const mainviewRef = useRef(null);
 

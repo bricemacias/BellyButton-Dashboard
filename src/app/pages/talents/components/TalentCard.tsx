@@ -42,7 +42,7 @@ const AvatarSection = styled.div`
   height: 130px;
 `;
 
-const Avatar = styled.img<any>`
+const Avatar = styled.img`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -245,7 +245,12 @@ const Button = styled.button`
   }
 `;
 
-const TalentCard = (props: any) => {
+interface TalentCardProps {
+  key: string;
+  data: any;
+}
+
+const TalentCard = (props: TalentCardProps) => {
   const talents = useSelector((state: RootState) => state.talents.data);
   const dispatch = useDispatch();
   const updateTalents = talentsReducer.updateTalents;
@@ -292,7 +297,7 @@ const TalentCard = (props: any) => {
   // TODO: v30count useState int, updates when modal update
   // TODO: Fauna, make all dates coherent between most recent and all subscribers and V30, changing them to january, adding february in the middle and for more recent, and test the program for march to see if it updates both all and most recent subscribers
 
-  const openInNewTab = (url: any) => {
+  const openInNewTab = (url: string) => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
   };

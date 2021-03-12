@@ -1,4 +1,5 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
 import user from '../../../assets/user-6.jpg';
 import bellSvg from '../../../assets/SVG/bell.svg';
@@ -28,7 +29,12 @@ import { Header as HeaderLayout } from '../../../styles/layout';
 import Search from '../../../components/Search';
 import Burger from '../../../components/Burger';
 
-const Header = ({ history, setOpen, open, burgerRef }: any) => {
+interface HeaderProps extends RouteComponentProps {
+  setOpen: () => void;
+  open: boolean;
+}
+
+const Header = ({ history, setOpen, open }: HeaderProps) => {
   const updateToken = authReducer.updateToken;
   const dispatch = useDispatch();
   const [logoutUser, { loading, error }] = useMutation(LOGOUT);
@@ -50,7 +56,7 @@ const Header = ({ history, setOpen, open, burgerRef }: any) => {
   return (
     <>
       <HeaderLayout>
-        <Burger open={open} setOpen={setOpen} ref={burgerRef} />
+        <Burger open={open} setOpen={setOpen} />
         <Search />
         <UserNav>
           <UserNavIconBox>

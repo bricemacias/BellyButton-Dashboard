@@ -90,12 +90,17 @@ const ChartContainer = styled.div`
   margin-bottom: -40px;
 `;
 
+interface SubscribersElementProps {
+  value: number;
+  date: string;
+}
+
 const Subscribers = (props: any) => {
   // const nowDate = DateTime.now();
 
   const data = {
     labels: props.data.subscribers
-      .map((el: any) => {
+      .map((el: SubscribersElementProps) => {
         let date = DateTime.fromISO(el.date);
         return `${Info.months('long', { locale: 'en-GB' })[date.month - 1]} ${
           date.year
@@ -106,7 +111,7 @@ const Subscribers = (props: any) => {
       {
         label: 'Number of Subscribers',
         data: props.data.subscribers
-          .map((el: any) => {
+          .map((el: SubscribersElementProps) => {
             return el.value;
           })
           .reverse(),
