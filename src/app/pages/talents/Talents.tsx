@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../logic/store';
 
-import TalentCard from '../../../components/TalentCard';
+import TalentCard from './components/TalentCard';
 
 interface ContainerProps {
   height: Number;

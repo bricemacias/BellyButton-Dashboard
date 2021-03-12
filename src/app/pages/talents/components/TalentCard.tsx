@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { DomainIcons } from '../components/utils/DomainIcons';
+import { DomainIcons } from '../../../../components/utils/DomainIcons';
 
 import { DateTime } from 'luxon';
 
-import { UPDATE_TALENT_SUBSCRIBERS } from '../graphql/app';
+import { UPDATE_TALENT_SUBSCRIBERS } from '../../../../graphql/app';
 import { useMutation } from '@apollo/client';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../../logic/store';
+import talentsReducer from '../../../../logic/app/talentsReducer';
 
 import { useToasts } from 'react-toast-notifications';
 
 import Subscribers from './Subscribers';
 
-import youtubeSvg from '../assets/SVG/youtube.svg';
-import triangleUpSvg from '../assets/SVG/triangle-up.svg';
-import triangleDownSvg from '../assets/SVG/triangle-down.svg';
-import controllerRecordSvg from '../assets/SVG/controller-record.svg';
-import checkSvg from '../assets/SVG/check.svg';
-import warningSvg from '../assets/SVG/warning.svg';
-import hourGlassSvg from '../assets/SVG/hour-glass.svg';
+import youtubeSvg from '../../../../assets/SVG/youtube.svg';
+import triangleUpSvg from '../../../../assets/SVG/triangle-up.svg';
+import triangleDownSvg from '../../../../assets/SVG/triangle-down.svg';
+import controllerRecordSvg from '../../../../assets/SVG/controller-record.svg';
+import checkSvg from '../../../../assets/SVG/check.svg';
+import warningSvg from '../../../../assets/SVG/warning.svg';
+import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
 
 import { ReactSVG } from 'react-svg';
 
@@ -242,6 +246,10 @@ const Button = styled.button`
 `;
 
 const TalentCard = (props: any) => {
+  const talents = useSelector((state: RootState) => state.talents.data);
+  const dispatch = useDispatch();
+  const updateTalents = talentsReducer.updateTalents;
+
   const { addToast } = useToasts();
   const [subscribersClick, setSubscribersClick] = useState<Boolean>(false);
 
@@ -336,8 +344,27 @@ const TalentCard = (props: any) => {
                   ),
                 },
               }).then((result) => {
+                let resultCopy = { ...result.data.updateTalent };
                 setSubscribersCount(
                   result.data.updateTalent.mostRecentSubscribers.value
+                );
+                let talentsCopy = [...talents];
+                dispatch(
+                  updateTalents(
+                    talentsCopy.map((el: any) => {
+                      if (el._id === props.data._id) {
+                        return {
+                          ...el,
+                          mostRecentSubscribers: {
+                            ...resultCopy.mostRecentSubscribers,
+                          },
+                          subscribers: [...resultCopy.subscribers],
+                        };
+                      } else {
+                        return el;
+                      }
+                    })
+                  )
                 );
                 setUpdatedSubscribers(true);
               });
@@ -468,11 +495,12 @@ const TalentCard = (props: any) => {
                   <UpdateIndicatorIcon
                     subscriberscount={subscribersCount}
                     updatedsubscribers={updatedSubscribers.toString()}
-                    loading={loading.toString()}
+                    requestloading={loading.toString()}
                     src={
-                      subscribersCount && updatedSubscribers
+                      subscribersCount &&
+                      updatedSubscribers.toString() === 'true'
                         ? checkSvg
-                        : loading
+                        : loading.toString() === 'true'
                         ? hourGlassSvg
                         : warningSvg
                     }

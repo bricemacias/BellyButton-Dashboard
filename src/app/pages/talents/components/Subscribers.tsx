@@ -7,10 +7,10 @@ import { ReactSVG } from 'react-svg';
 import { Line } from '@reactchartjs/react-chart.js';
 import { DateTime, Info } from 'luxon';
 
-import chevronLeftSvg from '../assets/SVG/chevron-left.svg';
-import checkSvg from '../assets/SVG/check.svg';
-import hourGlassSvg from '../assets/SVG/hour-glass.svg';
-import warningSvg from '../assets/SVG/warning.svg';
+import chevronLeftSvg from '../../../../assets/SVG/chevron-left.svg';
+import checkSvg from '../../../../assets/SVG/check.svg';
+import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
+import warningSvg from '../../../../assets/SVG/warning.svg';
 
 const SubscribersContainer = styled.div`
   background-color: transparent;
@@ -95,69 +95,21 @@ const Subscribers = (props: any) => {
 
   const data = {
     labels: props.data.subscribers
-      //@ts-ignore
-      .map((el) => {
+      .map((el: any) => {
         let date = DateTime.fromISO(el.date);
         return `${Info.months('long', { locale: 'en-GB' })[date.month - 1]} ${
           date.year
         }`;
       })
       .reverse(),
-    // props.checkmonth === true
-    //   ? props.data.subscribers
-    //       //@ts-ignore
-    //       .map((el) => {
-    //         let date = DateTime.fromISO(el.date);
-    //         return `${
-    //           Info.months('long', { locale: 'en-GB' })[date.month - 1]
-    //         } ${date.year}`;
-    //       })
-    //       .reverse()
-    //   : props.updatedsubscribers === 'true'
-    //   ? [
-    //       `${Info.months('long', { locale: 'en-GB' })[nowDate.month - 1]} ${
-    //         nowDate.year
-    //       }`,
-    //     ]
-    //       .concat(
-    //         props.data.subscribers
-    //           //@ts-ignore
-    //           .map((el) => {
-    //             let date = DateTime.fromISO(el.date);
-    //             return `${
-    //               Info.months('long', { locale: 'en-GB' })[date.month - 1]
-    //             } ${date.year}`;
-    //           })
-    //       )
-    //       .reverse()
-    //   : [],
     datasets: [
       {
         label: 'Number of Subscribers',
         data: props.data.subscribers
-          //@ts-ignore
-          .map((el) => {
+          .map((el: any) => {
             return el.value;
           })
           .reverse(),
-        // props.checkmonth === 'true'
-        //   ? props.data.subscribers
-        //       //@ts-ignore
-        //       .map((el) => {
-        //         return el.value;
-        //       })
-        //       .reverse()
-        //   : props.updatedsubscribers === 'false'
-        //   ? [props.subscriberscount]
-        //       .concat(
-        //         props.data.subscribers
-        //           //@ts-ignore
-        //           .map((el) => {
-        //             return el.value;
-        //           })
-        //       )
-        //       .reverse()
-        //   : [],
         fill: false,
         backgroundColor: 'rgb(255, 183, 199)',
         borderColor: 'rgb(255, 99, 133)',

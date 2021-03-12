@@ -5,11 +5,10 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { Container, Content, MainContent, MainView } from '../../styles/layout';
 
-import { RootState } from '../../logic/store';
 import { ALL_TALENTS } from '../../graphql/app/index';
 import talentsReducer from '../../logic/app/talentsReducer';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useQuery } from '@apollo/client';
 
 import Header from '../layout/header/Header';
@@ -35,7 +34,6 @@ const Dashboard = () => {
 
   const mainviewRef = useRef(null);
 
-  const talents = useSelector((state: RootState) => state.talents.data);
   const dispatch = useDispatch();
   const updateTalents = talentsReducer.updateTalents;
   const { data, loading, error } = useQuery(ALL_TALENTS);
@@ -49,10 +47,6 @@ const Dashboard = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, error]);
-
-  useEffect(() => {
-    console.log(talents);
-  }, [talents]);
 
   const setOpen = () => {
     setOpenState(!open);
