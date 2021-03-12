@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Operations from '../app/pages/dashboard/Operations';
 import Potential from '../app/pages/dashboard/Potential';
-import Talents from '../app/pages/talents/Talents';
+import Talents from '../app/pages/Talents/Talents';
 import Prospects from '../app/pages/dashboard/Prospects';
 import Analytics from '../app/pages/dashboard/Analytics';
 import HelpCenter from '../app/pages/dashboard/HelpCenter';

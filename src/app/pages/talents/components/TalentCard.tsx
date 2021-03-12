@@ -270,11 +270,9 @@ const TalentCard = (props: TalentCardProps) => {
 
   const NowTime = DateTime.now();
 
-  const checkMonthSubscribers = props.data.subscribers
-    //@ts-ignore
-    .some((el) => {
-      return DateTime.fromISO(el.date).hasSame(NowTime, 'month');
-    });
+  const checkMonthSubscribers = props.data.subscribers.some((el: any) => {
+    return DateTime.fromISO(el.date).hasSame(NowTime, 'month');
+  });
 
   const [updatedSubscribers, setUpdatedSubscribers] = useState<Boolean>(
     checkMonthSubscribers
@@ -332,21 +330,38 @@ const TalentCard = (props: TalentCardProps) => {
                       result.items[0].statistics.subscriberCount
                   ),
                   date: NowTime.toISODate(),
-                  subscribers: [
-                    {
-                      value: parseInt(
-                        result &&
-                          result.items &&
-                          result.items[0].statistics.subscriberCount
+                  subscribers: checkMonthSubscribers
+                    ? props.data.subscribers.map((el: any) => {
+                        if (
+                          DateTime.fromISO(el.date).hasSame(NowTime, 'month')
+                        ) {
+                          return {
+                            value: parseInt(
+                              result &&
+                                result.items &&
+                                result.items[0].statistics.subscriberCount
+                            ),
+                            date: NowTime.toISODate(),
+                          };
+                        } else {
+                          return { value: el.value, date: el.date };
+                        }
+                      })
+                    : [
+                        {
+                          value: parseInt(
+                            result &&
+                              result.items &&
+                              result.items[0].statistics.subscriberCount
+                          ),
+                          date: NowTime.toISODate(),
+                        },
+                      ].concat(
+                        //@ts-ignore
+                        props.data.subscribers.map((el) => {
+                          return { value: el.value, date: el.date };
+                        })
                       ),
-                      date: NowTime.toISODate(),
-                    },
-                  ].concat(
-                    //@ts-ignore
-                    props.data.subscribers.map((el) => {
-                      return { value: el.value, date: el.date };
-                    })
-                  ),
                 },
               }).then((result) => {
                 let resultCopy = { ...result.data.updateTalent };
@@ -464,6 +479,7 @@ const TalentCard = (props: TalentCardProps) => {
             updatedsubscribers={updatedSubscribers.toString()}
             checkmonth={checkMonthSubscribers.toString()}
             subscriberscount={subscribersCount}
+            fetchsubscribers={fetchSubscribers}
             loading={loading}
             error={error}
           />

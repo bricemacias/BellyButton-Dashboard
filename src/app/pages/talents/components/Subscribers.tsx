@@ -11,6 +11,7 @@ import chevronLeftSvg from '../../../../assets/SVG/chevron-left.svg';
 import checkSvg from '../../../../assets/SVG/check.svg';
 import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
 import warningSvg from '../../../../assets/SVG/warning.svg';
+import cycleSvg from '../../../../assets/SVG/cycle.svg';
 
 const SubscribersContainer = styled.div`
   background-color: transparent;
@@ -69,7 +70,7 @@ const Update = styled.div`
   width: 30px;
 `;
 
-const UpdateIcon = styled(ReactSVG)`
+const UpdateIcon = styled(ReactSVG)<any>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,6 +82,7 @@ const UpdateIcon = styled(ReactSVG)`
     width: 18px;
     height: 18px;
   }
+  ${(p) => p.update === 'true' && p.isloading === 'false' && 'cursor: pointer'};
 `;
 
 const ChartContainer = styled.div`
@@ -96,7 +98,11 @@ interface SubscribersElementProps {
 }
 
 const Subscribers = (props: any) => {
-  // const nowDate = DateTime.now();
+  const nowDate = DateTime.now();
+
+  const checkDaySubscribers = props.data.subscribers.some((el: any) => {
+    return DateTime.fromISO(el.date).hasSame(nowDate, 'day');
+  });
 
   const data = {
     labels: props.data.subscribers
@@ -177,10 +183,19 @@ const Subscribers = (props: any) => {
         </GoBack>
         <Title>Subscribers</Title>
         <Update>
-          {props.updatedsubscribers === 'true' ? (
-            <UpdateIcon src={checkSvg} />
-          ) : props.loading ? (
+          {props.loading ? (
             <UpdateIcon src={hourGlassSvg} />
+          ) : props.updatedsubscribers === 'true' ? (
+            <UpdateIcon
+              update={checkDaySubscribers ? 'false' : 'true'}
+              isloading={props.loading ? 'true' : 'false'}
+              onClick={() => {
+                !checkDaySubscribers &&
+                  !props.loading &&
+                  props.fetchsubscribers();
+              }}
+              src={checkDaySubscribers ? checkSvg : cycleSvg}
+            />
           ) : (
             <UpdateIcon src={warningSvg} />
           )}
