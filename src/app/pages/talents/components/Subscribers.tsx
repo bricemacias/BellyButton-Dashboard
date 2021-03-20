@@ -1,16 +1,16 @@
-// TODO: add button to update, if it has already been updated during the month, it will only change the value of the current month. If it has not been updated, it will change the most recent, and add a new element on the total vector for the actual month, and set subscribersCount to new value
-// TODO: add case when there is not enough data, (only one month available), and only take the last 5 months maximum
-
 import React from 'react';
 import styled from 'styled-components';
 import { ReactSVG } from 'react-svg';
 import { Line } from '@reactchartjs/react-chart.js';
 import { DateTime, Info } from 'luxon';
 
-import chevronLeftSvg from '../assets/SVG/chevron-left.svg';
-import checkSvg from '../assets/SVG/check.svg';
-import hourGlassSvg from '../assets/SVG/hour-glass.svg';
-import warningSvg from '../assets/SVG/warning.svg';
+import NewTalent from './NewTalent';
+
+import chevronLeftSvg from '../../../../assets/SVG/chevron-left.svg';
+import checkSvg from '../../../../assets/SVG/check.svg';
+import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
+import warningSvg from '../../../../assets/SVG/warning.svg';
+import cycleSvg from '../../../../assets/SVG/cycle.svg';
 
 const SubscribersContainer = styled.div`
   background-color: transparent;
@@ -44,7 +44,7 @@ const GoBackIcon = styled(ReactSVG)`
   justify-content: center;
   width: 20px;
   height: 20px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) => p.theme.colors.secondary.blue};
   &:hover {
     width: 22px;
@@ -69,18 +69,19 @@ const Update = styled.div`
   width: 30px;
 `;
 
-const UpdateIcon = styled(ReactSVG)`
+const UpdateIcon = styled(ReactSVG)<any>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 17px;
   height: 17px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) => p.theme.colors.secondary.blue};
   &:hover {
     width: 18px;
     height: 18px;
   }
+  ${(p) => p.update === 'true' && p.isloading === 'false' && 'cursor: pointer'};
 `;
 
 const ChartContainer = styled.div`
@@ -90,74 +91,35 @@ const ChartContainer = styled.div`
   margin-bottom: -40px;
 `;
 
+interface SubscribersElementProps {
+  value: number;
+  date: string;
+}
+
 const Subscribers = (props: any) => {
-  // const nowDate = DateTime.now();
+  const nowDate = DateTime.now();
+
+  const checkDaySubscribers = props.data.subscribers.some((el: any) => {
+    return DateTime.fromISO(el.date).hasSame(nowDate, 'day');
+  });
 
   const data = {
     labels: props.data.subscribers
-      //@ts-ignore
-      .map((el) => {
+      .map((el: SubscribersElementProps) => {
         let date = DateTime.fromISO(el.date);
         return `${Info.months('long', { locale: 'en-GB' })[date.month - 1]} ${
           date.year
         }`;
       })
       .reverse(),
-    // props.checkmonth === true
-    //   ? props.data.subscribers
-    //       //@ts-ignore
-    //       .map((el) => {
-    //         let date = DateTime.fromISO(el.date);
-    //         return `${
-    //           Info.months('long', { locale: 'en-GB' })[date.month - 1]
-    //         } ${date.year}`;
-    //       })
-    //       .reverse()
-    //   : props.updatedsubscribers === 'true'
-    //   ? [
-    //       `${Info.months('long', { locale: 'en-GB' })[nowDate.month - 1]} ${
-    //         nowDate.year
-    //       }`,
-    //     ]
-    //       .concat(
-    //         props.data.subscribers
-    //           //@ts-ignore
-    //           .map((el) => {
-    //             let date = DateTime.fromISO(el.date);
-    //             return `${
-    //               Info.months('long', { locale: 'en-GB' })[date.month - 1]
-    //             } ${date.year}`;
-    //           })
-    //       )
-    //       .reverse()
-    //   : [],
     datasets: [
       {
         label: 'Number of Subscribers',
         data: props.data.subscribers
-          //@ts-ignore
-          .map((el) => {
+          .map((el: SubscribersElementProps) => {
             return el.value;
           })
           .reverse(),
-        // props.checkmonth === 'true'
-        //   ? props.data.subscribers
-        //       //@ts-ignore
-        //       .map((el) => {
-        //         return el.value;
-        //       })
-        //       .reverse()
-        //   : props.updatedsubscribers === 'false'
-        //   ? [props.subscriberscount]
-        //       .concat(
-        //         props.data.subscribers
-        //           //@ts-ignore
-        //           .map((el) => {
-        //             return el.value;
-        //           })
-        //       )
-        //       .reverse()
-        //   : [],
         fill: false,
         backgroundColor: 'rgb(255, 183, 199)',
         borderColor: 'rgb(255, 99, 133)',
@@ -175,7 +137,12 @@ const Subscribers = (props: any) => {
     scales: {
       xAxes: [
         {
-          ticks: { display: true, autoSkip: true, maxTicksLimit: 4 },
+          ticks: {
+            display: true,
+            autoSkip: true,
+            maxTicksLimit: 4,
+            fontSize: 8,
+          },
           gridLines: {
             display: false,
             drawBorder: false,
@@ -184,7 +151,12 @@ const Subscribers = (props: any) => {
       ],
       yAxes: [
         {
-          ticks: { display: false, autoSkip: true, maxTicksLimit: 3 },
+          ticks: {
+            display: true,
+            autoSkip: true,
+            maxTicksLimit: 3,
+            fontSize: 7,
+          },
           gridLines: {
             display: true,
             drawBorder: false,
@@ -210,18 +182,31 @@ const Subscribers = (props: any) => {
         </GoBack>
         <Title>Subscribers</Title>
         <Update>
-          {props.updatedsubscribers === 'true' ? (
-            <UpdateIcon src={checkSvg} />
-          ) : props.loading ? (
+          {props.loading ? (
             <UpdateIcon src={hourGlassSvg} />
+          ) : props.updatedsubscribers === 'true' ? (
+            <UpdateIcon
+              update={checkDaySubscribers ? 'false' : 'true'}
+              isloading={props.loading ? 'true' : 'false'}
+              onClick={() => {
+                !checkDaySubscribers &&
+                  !props.loading &&
+                  props.fetchsubscribers();
+              }}
+              src={checkDaySubscribers ? checkSvg : cycleSvg}
+            />
           ) : (
             <UpdateIcon src={warningSvg} />
           )}
         </Update>
       </TopBarContainer>
-      <ChartContainer>
-        <Line type="line" data={data} options={options} />
-      </ChartContainer>
+      {data.labels.length > 1 ? (
+        <ChartContainer>
+          <Line type="line" data={data} options={options} />
+        </ChartContainer>
+      ) : (
+        <NewTalent />
+      )}
     </SubscribersContainer>
   );
 };

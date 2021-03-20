@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import styled from 'styled-components';
 import questionSvg from '../../../assets/SVG/question.svg';
 import cogSvg from '../../../assets/SVG/cog.svg';
@@ -41,7 +41,13 @@ const Image = styled.img`
   height: 40px;
 `;
 
-export const Sidebar = ({ open, sideBarRef, width }: any) => {
+interface SidebarProps {
+  open: boolean;
+  sideBarRef: Ref<HTMLElement>;
+  width: number | undefined;
+}
+
+export const Sidebar = ({ open, sideBarRef, width }: SidebarProps) => {
   return (
     <>
       <SidebarLayout open={open} ref={sideBarRef}>
@@ -53,7 +59,7 @@ export const Sidebar = ({ open, sideBarRef, width }: any) => {
           <SidebarContent />
         </div>
 
-        <BottomIcons width={width}>
+        <BottomIcons width={width ? width : 1100}>
           <SideNav>
             <SideNavItem>
               <SideNavLink exact to="/HelpCenter">

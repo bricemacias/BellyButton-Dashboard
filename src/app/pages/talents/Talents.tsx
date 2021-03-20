@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../logic/store';
 
-import TalentCard from '../../../components/TalentCard';
+import TalentCard from './components/TalentCard';
 
 interface ContainerProps {
-  height: Number;
-  width: Number;
-  windowSize: any;
+  height: number;
+  width: number;
+  windowSize: { height: number; width: number };
 }
 
 const Container = styled.div<ContainerProps>`
@@ -22,7 +22,6 @@ const Container = styled.div<ContainerProps>`
   flex: 1;
   background-color: ${(p) => p.theme.colors.lightgrey1};
   height: ${(p) => `${p.height}px`};
-  /* width: ${(p) => `${p.windowSize.width}`}; */
 
   @media (min-width: ${(p) => p.theme.screen.largest}) {
     height: 539px;
@@ -35,15 +34,21 @@ const Container = styled.div<ContainerProps>`
 
   overflow-y: scroll;
 `;
-const Talents = (props: any) => {
+
+interface TalentsProps {
+  mainviewDimensions: { height: number; width: number };
+  windowSize: { height: number; width: number };
+}
+
+const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
   const talents = useSelector((state: RootState) => state.talents.data);
 
   return (
     <Opacity duration={1}>
       <Container
-        height={props.mainviewDimensions.height}
-        width={props.mainviewDimensions.width}
-        windowSize={props.windowSize}
+        height={mainviewDimensions.height}
+        width={mainviewDimensions.width}
+        windowSize={windowSize}
       >
         {' '}
         {talents.map((el) => {

@@ -95,4 +95,33 @@ const UPDATE_TALENT_SUBSCRIBERS = gql`
   }
 `;
 
-export { GET_USERS, ALL_TALENTS, UPDATE_TALENT_SUBSCRIBERS };
+const UPDATE_TALENT_V30 = gql`
+  mutation UpdateTalentV30(
+    $id: ID!
+    $name: String!
+    $value: Int
+    $date: Date
+    $v30: [V30Input]
+  ) {
+    updateTalent(
+      id: $id
+      data: {
+        name: $name
+        mostRecentV30: { value: $value, date: $date }
+        v30: $v30
+      }
+    ) {
+      name
+      mostRecentV30 {
+        value
+        date
+      }
+      v30 {
+        value
+        date
+      }
+    }
+  }
+`;
+
+export { GET_USERS, ALL_TALENTS, UPDATE_TALENT_SUBSCRIBERS, UPDATE_TALENT_V30 };

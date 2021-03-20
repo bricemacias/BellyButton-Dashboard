@@ -20,6 +20,7 @@
     "@types/react-svg": "^5.0.0",
     "@types/react-toast-notifications": "^2.4.0",
     "@types/styled-components": "^5.1.7",
+    "@types/styled-react-modal": "^1.2.0",
     "chart.js": "^2.9.4",
     "dotenv": "^8.2.0",
     "framer-motion": "^3.2.2-rc.1",
@@ -34,6 +35,7 @@
     "react-svg": "^12.1.0",
     "react-toast-notifications": "^2.4.0",
     "styled-components": "^5.2.1",
+    "styled-react-modal": "^2.0.1",
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4"
   },

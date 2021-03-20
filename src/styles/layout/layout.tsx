@@ -143,7 +143,7 @@ export const MainContent = styled.div`
   }
 `;
 
-export const MainView = styled.main<any>`
+export const MainView = styled.main`
   background-color: transparent;
   display: flex;
   align-items: center;
@@ -155,7 +155,4 @@ export const MainView = styled.main<any>`
     height: 539px;
     width: 1016px;
   }
-  /* TEST
-  background-color: orangered;
-  height: 80rem; */
 `;
