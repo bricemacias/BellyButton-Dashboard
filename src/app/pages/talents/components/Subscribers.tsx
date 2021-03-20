@@ -1,11 +1,10 @@
-// TODO: add case when there is not enough data, (only one month available), and only take the last 5 months maximum
-
 import React from 'react';
-import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { ReactSVG } from 'react-svg';
 import { Line } from '@reactchartjs/react-chart.js';
 import { DateTime, Info } from 'luxon';
+
+import NewTalent from './NewTalent';
 
 import chevronLeftSvg from '../../../../assets/SVG/chevron-left.svg';
 import checkSvg from '../../../../assets/SVG/check.svg';
@@ -45,7 +44,7 @@ const GoBackIcon = styled(ReactSVG)`
   justify-content: center;
   width: 20px;
   height: 20px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) => p.theme.colors.secondary.blue};
   &:hover {
     width: 22px;
@@ -76,7 +75,7 @@ const UpdateIcon = styled(ReactSVG)<any>`
   justify-content: center;
   width: 17px;
   height: 17px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) => p.theme.colors.secondary.blue};
   &:hover {
     width: 18px;
@@ -90,16 +89,6 @@ const ChartContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: -40px;
-`;
-
-const NewTalent = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 10px;
-  text-align: center;
-  padding: 35px 50px 35px;
-  color: ${(p) => p.theme.colors.secondary.blue};
 `;
 
 interface SubscribersElementProps {
@@ -216,14 +205,7 @@ const Subscribers = (props: any) => {
           <Line type="line" data={data} options={options} />
         </ChartContainer>
       ) : (
-        <NewTalent
-          initial={{ y: '5px' }}
-          animate={{ y: '0px' }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          This Talent has not enough history yet, come back next month 🙂
-        </NewTalent>
+        <NewTalent />
       )}
     </SubscribersContainer>
   );

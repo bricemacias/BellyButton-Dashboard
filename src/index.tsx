@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 
 import theme from './styles/theme';
 import { ThemeProvider } from 'styled-components';
-
 import { Provider } from 'react-redux';
 
 import { ToastProvider } from 'react-toast-notifications';

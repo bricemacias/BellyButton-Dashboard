@@ -4,7 +4,10 @@ import { DomainIcons } from '../../../../components/utils/DomainIcons';
 
 import { DateTime } from 'luxon';
 
-import { UPDATE_TALENT_SUBSCRIBERS } from '../../../../graphql/app';
+import {
+  UPDATE_TALENT_SUBSCRIBERS,
+  UPDATE_TALENT_V30,
+} from '../../../../graphql/app';
 import { useMutation } from '@apollo/client';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +17,7 @@ import talentsReducer from '../../../../logic/app/talentsReducer';
 import { useToasts } from 'react-toast-notifications';
 
 import Subscribers from './Subscribers';
+import V30 from './V30';
 
 import youtubeSvg from '../../../../assets/SVG/youtube.svg';
 import triangleUpSvg from '../../../../assets/SVG/triangle-up.svg';
@@ -65,7 +69,7 @@ const Platform = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 50px;
-  z-index: 1000;
+  /* z-index: 1000; */
 `;
 
 const PlatformIcon = styled(ReactSVG)`
@@ -74,7 +78,7 @@ const PlatformIcon = styled(ReactSVG)`
   justify-content: center;
   width: 18px;
   height: 18px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) => p.theme.colors.error.main};
 `;
 
@@ -96,7 +100,7 @@ const Card = styled.div`
   /* border-image: linear-gradient(to right, #eb2f64, #ff4081); */
   border-image-slice: 1;
   box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.3);
-  z-index: 100;
+  /* z-index: 100; */
 
   @media only screen and (max-width: ${(p) => p.theme.screen.smallest}) {
     box-shadow: none;
@@ -188,9 +192,9 @@ const UpdateIndicatorIcon = styled(ReactSVG)<any>`
   justify-content: center;
   width: 10px;
   height: 10px;
-  z-index: 2000;
+  /* z-index: 2000; */
   fill: ${(p) =>
-    p.subscriberscount && p.updatedsubscribers === 'true'
+    p.count && p.updated === 'true'
       ? p.theme.colors.success
       : p.loading === 'true'
       ? p.theme.colors.primary.main
@@ -208,15 +212,13 @@ const EvolutionIndicatorIcon = styled(ReactSVG)<any>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: ${(p) =>
-    p.subscribersevolutioncondition === 'same' ? '10px' : '18px'};
-  height: ${(p) =>
-    p.subscribersevolutioncondition === 'same' ? '10px' : '18px'};
-  z-index: 2000;
+  width: ${(p) => (p.evolutioncondition === 'same' ? '10px' : '18px')};
+  height: ${(p) => (p.evolutioncondition === 'same' ? '10px' : '18px')};
+  /* z-index: 2000; */
   fill: ${(p) =>
-    p.subscribersevolutioncondition === 'up'
+    p.evolutioncondition === 'up'
       ? p.theme.colors.success
-      : p.subscribersevolutioncondition === 'same'
+      : p.evolutioncondition === 'same'
       ? p.theme.colors.info
       : p.theme.colors.error.main};
 `;
@@ -229,7 +231,7 @@ const Button = styled.button`
   border-radius: 50px;
   font-size: 12px;
   font-weight: 400;
-  z-index: 200;
+  /* z-index: 200; */
   border: none;
   color: white;
   background: ${(p) =>
@@ -257,10 +259,18 @@ const TalentCard = (props: TalentCardProps) => {
 
   const { addToast } = useToasts();
   const [subscribersClick, setSubscribersClick] = useState<Boolean>(false);
+  const [v30Click, setV30Click] = useState<Boolean>(false);
 
-  const [updateTalentSubscribers, { loading, error }] = useMutation(
-    UPDATE_TALENT_SUBSCRIBERS
-  );
+  const [
+    updateTalentSubscribers,
+    { loading: loadingSubscribers, error: errorSubscribers },
+  ] = useMutation(UPDATE_TALENT_SUBSCRIBERS);
+
+  const [
+    updateTalentV30,
+    { loading: loadingV30, error: v30Error },
+  ] = useMutation(UPDATE_TALENT_V30);
+
   const [subscribersCount, setSubscribersCount] = useState<Number>(
     props.data &&
       props.data.mostRecentSubscribers &&
@@ -268,9 +278,19 @@ const TalentCard = (props: TalentCardProps) => {
       props.data.mostRecentSubscribers.value
   );
 
+  const [v30Count, setV30Count] = useState<Number>(
+    props.data &&
+      props.data.mostRecentV30 &&
+      props.data.mostRecentV30.value &&
+      props.data.mostRecentV30.value
+  );
+
   const NowTime = DateTime.now();
 
   const checkMonthSubscribers = props.data.subscribers.some((el: any) => {
+    return DateTime.fromISO(el.date).hasSame(NowTime, 'month');
+  });
+  const checkMonthV30 = props.data.v30.some((el: any) => {
     return DateTime.fromISO(el.date).hasSame(NowTime, 'month');
   });
 
@@ -278,18 +298,38 @@ const TalentCard = (props: TalentCardProps) => {
     checkMonthSubscribers
   );
 
-  const SubscribersEvolutionCondition = checkMonthSubscribers
-    ? props.data.mostRecentSubscribers.value > props.data.subscribers[1].value
-      ? 'up'
-      : props.data.mostRecentSubscribers.value ===
-        props.data.subscribers[1].value
+  const [updatedV30, setUpdatedV30] = useState<Boolean>(checkMonthV30);
+
+  const SubscribersEvolutionCondition =
+    props.data.subscribers.length <= 1
       ? 'same'
-      : 'down'
-    : subscribersCount > props.data.subscribers[0].value
-    ? 'up'
-    : subscribersCount === props.data.subscribers[0].value
-    ? 'same'
-    : 'down';
+      : checkMonthSubscribers
+      ? props.data.mostRecentSubscribers.value > props.data.subscribers[1].value
+        ? 'up'
+        : props.data.mostRecentSubscribers.value ===
+          props.data.subscribers[1].value
+        ? 'same'
+        : 'down'
+      : subscribersCount > props.data.subscribers[0].value
+      ? 'up'
+      : subscribersCount === props.data.subscribers[0].value
+      ? 'same'
+      : 'down';
+
+  const V30EvolutionCondition =
+    props.data.v30.length <= 1
+      ? 'same'
+      : checkMonthV30
+      ? props.data.mostRecentV30.value > props.data.v30[1].value
+        ? 'up'
+        : props.data.mostRecentV30.value === props.data.v30[1].value
+        ? 'same'
+        : 'down'
+      : subscribersCount > props.data.v30[0].value
+      ? 'up'
+      : subscribersCount === props.data.v30[0].value
+      ? 'same'
+      : 'down';
 
   // TODO: v30 useState boolean
   // TODO: v30count useState int, updates when modal update
@@ -388,12 +428,12 @@ const TalentCard = (props: TalentCardProps) => {
                 );
                 setUpdatedSubscribers(true);
               });
-              if (error) {
+              if (errorSubscribers) {
                 addToast('GraphQL error in Update Talent Subscribers', {
                   appearance: 'error',
                   autoDismiss: true,
                 });
-                console.log(`GraphQL error : ${error.message}`);
+                console.log(`GraphQL error : ${errorSubscribers.message}`);
               }
             } catch (error) {
               addToast('GraphQL error in Update Talent Subscribers', {
@@ -480,8 +520,26 @@ const TalentCard = (props: TalentCardProps) => {
             checkmonth={checkMonthSubscribers.toString()}
             subscriberscount={subscribersCount}
             fetchsubscribers={fetchSubscribers}
-            loading={loading}
-            error={error}
+            loading={loadingSubscribers}
+            error={errorSubscribers}
+          />
+        ) : v30Click ? (
+          <V30
+            {...props}
+            goBack={() => setV30Click(false)}
+            updatetalent30={updateTalentV30}
+            updatedv30={updatedV30.toString()}
+            setupdatedv30={setUpdatedV30}
+            v30count={v30Count}
+            setv30count={setV30Count}
+            checkmonth={checkMonthV30}
+            dispatch={dispatch}
+            updatetalents={updateTalents}
+            talents={talents}
+            // v30count={v30Count}
+            // fetchv30={fetchV30}
+            v30loading={loadingV30.toString()}
+            v30error={v30Error}
           />
         ) : (
           <InformationSection>
@@ -495,13 +553,11 @@ const TalentCard = (props: TalentCardProps) => {
                 Subscribers
               </TitleElement>
               <ContentElement>
-                {loading ? '...' : subscribersCount}
+                {loadingSubscribers ? '...' : subscribersCount}
                 <EvolutionIndicator>
-                  {!loading && (
+                  {!loadingSubscribers && (
                     <EvolutionIndicatorIcon
-                      subscribersevolutioncondition={
-                        SubscribersEvolutionCondition
-                      }
+                      evolutioncondition={SubscribersEvolutionCondition}
                       src={
                         SubscribersEvolutionCondition === 'up'
                           ? triangleUpSvg
@@ -514,14 +570,14 @@ const TalentCard = (props: TalentCardProps) => {
                 </EvolutionIndicator>
                 <UpdateIndicator>
                   <UpdateIndicatorIcon
-                    subscriberscount={subscribersCount}
-                    updatedsubscribers={updatedSubscribers.toString()}
-                    requestloading={loading.toString()}
+                    count={subscribersCount}
+                    updated={updatedSubscribers.toString()}
+                    requestloading={loadingSubscribers.toString()}
                     src={
                       subscribersCount &&
                       updatedSubscribers.toString() === 'true'
                         ? checkSvg
-                        : loading.toString() === 'true'
+                        : loadingSubscribers.toString() === 'true'
                         ? hourGlassSvg
                         : warningSvg
                     }
@@ -530,13 +586,47 @@ const TalentCard = (props: TalentCardProps) => {
               </ContentElement>
             </Row>
             <Row>
-              <TitleElement>V30</TitleElement>
-              {/* // TODO: onclick v30 true */}
+              <TitleElement
+                onClick={() => {
+                  setV30Click(true);
+                }}
+                hover={true}
+              >
+                V30
+              </TitleElement>
               <ContentElement>
                 {props.data &&
                   props.data.mostRecentV30 &&
                   props.data.mostRecentV30.value &&
                   props.data.mostRecentV30.value}
+                <EvolutionIndicator>
+                  {!loadingV30 && (
+                    <EvolutionIndicatorIcon
+                      evolutioncondition={V30EvolutionCondition}
+                      src={
+                        V30EvolutionCondition === 'up'
+                          ? triangleUpSvg
+                          : V30EvolutionCondition === 'same'
+                          ? controllerRecordSvg
+                          : triangleDownSvg
+                      }
+                    />
+                  )}
+                </EvolutionIndicator>
+                <UpdateIndicator>
+                  <UpdateIndicatorIcon
+                    count={v30Count}
+                    updated={updatedV30.toString()}
+                    requestloading={loadingV30.toString()}
+                    src={
+                      v30Count && updatedV30.toString() === 'true'
+                        ? checkSvg
+                        : loadingV30.toString() === 'true'
+                        ? hourGlassSvg
+                        : warningSvg
+                    }
+                  />
+                </UpdateIndicator>
               </ContentElement>
               {/* // TODO : put exclamation warning to see if subscribers has not been actualized during the month. put check mark if it has been updated */}
               {/* // TODO : put circle, up or down arrow depending on if the value of tha actual month is the same, bigger or smaller than before */}
