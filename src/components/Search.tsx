@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import icons from '../assets/sprite.svg';
 
 import styled from 'styled-components';
+import { RootState } from '../logic/store';
+import searchReducer from '../logic/app/searchReducer';
 
 const SearchLayout = styled.form`
   /* flex: 0 0 40%; */
@@ -66,7 +69,11 @@ export const SearchInput = styled.input`
 
 export const SearchButton = styled.div`
   border: none;
-  background-color: ${(p) => p.theme.colors.grey.light2};
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: ${(p) => p.theme.colors.grey.light2}; */
 
   &:focus {
     outline: none;
@@ -84,10 +91,19 @@ export const SearchIcon = styled.svg`
 `;
 
 const Search = () => {
+  const search = useSelector((state: RootState) => state.search.data);
+  const updateSearchData = searchReducer.updateSearchData;
+  const dispatch = useDispatch();
+
   return (
     <>
       <SearchLayout>
-        <SearchInput type="text" placeholder="Search talents" />
+        <SearchInput
+          type="text"
+          placeholder="Search talents"
+          value={search}
+          onChange={(e) => dispatch(updateSearchData(e.target.value))}
+        />
         <SearchButton>
           <SearchIcon>
             <use xlinkHref={`${icons}#icon-magnifying-glass`} />

@@ -27,6 +27,9 @@ import checkSvg from '../../../../assets/SVG/check.svg';
 import warningSvg from '../../../../assets/SVG/warning.svg';
 import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
 
+import { RoundShape } from 'react-placeholder/lib/placeholders';
+
+import 'react-placeholder/lib/reactPlaceholder.css';
 import { ReactSVG } from 'react-svg';
 
 const CardContainer = styled.div`
@@ -331,10 +334,6 @@ const TalentCard = (props: TalentCardProps) => {
       ? 'same'
       : 'down';
 
-  // TODO: v30 useState boolean
-  // TODO: v30count useState int, updates when modal update
-  // TODO: Fauna, make all dates coherent between most recent and all subscribers and V30, changing them to january, adding february in the middle and for more recent, and test the program for march to see if it updates both all and most recent subscribers
-
   const openInNewTab = (url: string) => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
@@ -484,14 +483,27 @@ const TalentCard = (props: TalentCardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
+  const avatar = (display: boolean) => (
+    <Avatar
+      src={props.data && props.data.avatar && props.data.avatar}
+      onLoad={() => setAvatarLoaded(true)}
+      style={{ display: display ? 'visible' : 'none' }}
+      alt="Avatar"
+    />
+  );
+
   return (
     <CardContainer>
       <Card>
         <AvatarSection>
-          <Avatar
-            src={props.data && props.data.avatar && props.data.avatar}
-            alt="Avatar"
-          />
+          {avatar(avatarLoaded)}
+          {avatarLoaded ? (
+            avatar(true)
+          ) : (
+            <RoundShape color="#f7F7F7" style={{ width: 100, height: 100 }} />
+          )}
+
           <Platform>
             <PlatformIcon
               src={
@@ -504,8 +516,6 @@ const TalentCard = (props: TalentCardProps) => {
             />
           </Platform>
         </AvatarSection>
-        {/* // TODO : if subscribers, show subscribers component, if v30, show v30
-              // TODO : component, if !subscribers et !v30, show normal (below) */}
         <Name>{props.data && props.data.name && props.data.name}</Name>
         <Domain>
           {props.data &&
@@ -628,8 +638,6 @@ const TalentCard = (props: TalentCardProps) => {
                   />
                 </UpdateIndicator>
               </ContentElement>
-              {/* // TODO : put exclamation warning to see if subscribers has not been actualized during the month. put check mark if it has been updated */}
-              {/* // TODO : put circle, up or down arrow depending on if the value of tha actual month is the same, bigger or smaller than before */}
             </Row>
             <Row>
               <TitleElement>Price</TitleElement>
