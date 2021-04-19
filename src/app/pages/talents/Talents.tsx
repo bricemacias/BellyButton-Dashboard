@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Opacity } from '../../../animations';
 import styled from 'styled-components';
 
@@ -42,6 +42,24 @@ interface TalentsProps {
 
 const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
   const talents = useSelector((state: RootState) => state.talents.data);
+  const [searchTalents, setSearchTalents] = useState([]);
+
+  const search = useSelector((state: RootState) => state.search.data);
+
+  useEffect(() => {
+    if (search.length > 0) {
+      setSearchTalents(
+        talents.filter((el) => {
+          let name: String = el['name'];
+          if (name.toLowerCase().includes(search.toLowerCase())) {
+            return true;
+          }
+          return false;
+        })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   return (
     <Opacity duration={1}>
@@ -51,9 +69,13 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
         windowSize={windowSize}
       >
         {' '}
-        {talents.map((el) => {
-          return <TalentCard key={el['_id']} data={el} />;
-        })}
+        {search.length > 0
+          ? searchTalents.map((el) => {
+              return <TalentCard key={el['_id']} data={el} />;
+            })
+          : talents.map((el) => {
+              return <TalentCard key={el['_id']} data={el} />;
+            })}
       </Container>
     </Opacity>
   );
