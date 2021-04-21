@@ -2,7 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // NOTIFICATIONS STATE
 const notificationsInitialState = {
-  data: [],
+  data: [
+    {
+      title: 'this is a notification',
+      read: false,
+      callback: console.log('hola'),
+    },
+  ],
 };
 
 const notificationsState = createSlice({
