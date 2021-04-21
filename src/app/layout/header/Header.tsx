@@ -42,6 +42,74 @@ interface HeaderProps extends RouteComponentProps {
   open: boolean;
 }
 
+const Dropdown = styled(motion.div)<any>`
+  position: absolute;
+  z-index: 10;
+  top: 58px;
+  max-height: 350px;
+  width: ${(p) => (p.size ? `${p.size}px` : '200px')};
+  background-color: #f7f7f7;
+  color: ${(p) => p.theme.colors.secondary.main};
+  border: 1px solid ${(p) => p.theme.colors.secondary.main};
+  border-radius: 20px;
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.2);
+`;
+
+const Icon = styled(ReactSVG)`
+  width: 2rem;
+  height: 2rem;
+  fill: ${(p) => p.theme.colors.secondary.main};
+  margin-right: 5px;
+  transition: all 0.4s;
+`;
+
+const ReadIcon = styled.div`
+  transition: all 0.4s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 7px;
+  width: 7px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(p) => p.theme.colors.secondary.blue};
+`;
+
+const Title = styled.div``;
+
+const DropdownItem = styled.div`
+  position: relative;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  transition: all 0.4s;
+  padding: 0.7rem;
+  /* padding-left: 1.4rem; */
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  &:hover {
+    background-color: ${(p) => p.theme.colors.secondary.main};
+    color: #f7f7f7;
+  }
+
+  &:hover ${Icon} {
+    fill: #f7f7f7;
+  }
+
+  &:hover ${ReadIcon} {
+    background-color: ${(p) => p.theme.colors.tertiary.main};
+    height: 8px;
+    width: 8px;
+  }
+`;
+
 const Header = ({ history, setOpen, open }: HeaderProps) => {
   const updateToken = authReducer.updateToken;
   const notifications = useSelector(
@@ -66,49 +134,6 @@ const Header = ({ history, setOpen, open }: HeaderProps) => {
       addToast(error.message, { appearance: 'error', autoDismiss: true });
     }
   };
-
-  const Dropdown = styled(motion.div)<any>`
-    position: absolute;
-    z-index: 10;
-    top: 58px;
-    width: ${(p) => (p.size ? `${p.size}px` : '200px')};
-    background-color: #f7f7f7;
-    color: ${(p) => p.theme.colors.secondary.main};
-    border: 1px solid ${(p) => p.theme.colors.secondary.main};
-    border-radius: 20px;
-    padding: 1rem;
-    overflow: hidden;
-    box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.2);
-  `;
-
-  const Icon = styled(ReactSVG)`
-    width: 2rem;
-    height: 2rem;
-    fill: ${(p) => p.theme.colors.secondary.main};
-    margin-right: 5px;
-    transition: all 0.4s;
-  `;
-
-  const DropdownItem = styled.div`
-    height: 50px;
-    display: flex;
-    align-items: center;
-    border-radius: 15px;
-    transition: all 0.4s;
-    padding: 0.7rem;
-    padding-left: 1rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-
-    &:hover {
-      background-color: ${(p) => p.theme.colors.secondary.main};
-      color: #f7f7f7;
-    }
-
-    &:hover ${Icon} {
-      fill: #f7f7f7;
-    }
-  `;
 
   const notificationsRef = useRef(null);
   const userDropdownRef = useRef(null);
@@ -154,8 +179,17 @@ const Header = ({ history, setOpen, open }: HeaderProps) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <DropdownItem>Hello</DropdownItem>
-                <DropdownItem>Hello</DropdownItem>
+                {notifications.map((el, i) => (
+                  <DropdownItem
+                    key={`item${i}`}
+                    onClick={() =>
+                      el.type === 'V30Update' && console.log('hola')
+                    }
+                  >
+                    {!el.read && <ReadIcon key={`readicon${i}`} />}
+                    <Title key={`Title${i}`}>{el.title}</Title>
+                  </DropdownItem>
+                ))}
               </Dropdown>
             )}
           </UserNavIconBox>

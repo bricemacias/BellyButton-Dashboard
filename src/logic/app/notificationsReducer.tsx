@@ -4,9 +4,29 @@ import { createSlice } from '@reduxjs/toolkit';
 const notificationsInitialState = {
   data: [
     {
-      title: 'this is a notification',
+      title: `V30 of AlphaDelta06 needs to be updated`,
       read: false,
-      callback: console.log('hola'),
+      type: 'V30Update',
+    },
+    {
+      title: 'V30 of Hit The Road needs to be updated',
+      read: false,
+      type: 'V30Update',
+    },
+    {
+      title: 'V30 of McSkyz needs to be updated',
+      read: false,
+      type: 'V30Update',
+    },
+    {
+      title: 'V30 of Jaymax VI needs to be updated',
+      read: false,
+      type: 'V30Update',
+    },
+    {
+      title: `V30 of Nam's needs to be updated`,
+      read: false,
+      type: 'V30Update',
     },
   ],
 };
