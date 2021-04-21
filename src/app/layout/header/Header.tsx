@@ -92,7 +92,7 @@ const DropdownItem = styled.div`
   padding: 0.7rem;
   /* padding-left: 1.4rem; */
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
 
   &:hover {
     background-color: ${(p) => p.theme.colors.secondary.main};
@@ -179,17 +179,23 @@ const Header = ({ history, setOpen, open }: HeaderProps) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {notifications.map((el, i) => (
-                  <DropdownItem
-                    key={`item${i}`}
-                    onClick={() =>
-                      el.type === 'V30Update' && console.log('hola')
-                    }
-                  >
-                    {!el.read && <ReadIcon key={`readicon${i}`} />}
-                    <Title key={`Title${i}`}>{el.title}</Title>
+                {notifications.length === 0 ? (
+                  <DropdownItem>
+                    <Title>No notifications for the moment</Title>
                   </DropdownItem>
-                ))}
+                ) : (
+                  notifications.map((el: any, i) => (
+                    <DropdownItem
+                      key={`item${i}`}
+                      onClick={() =>
+                        el.type === 'V30Update' && console.log('hola')
+                      }
+                    >
+                      {!el.read && <ReadIcon key={`readicon${i}`} />}
+                      <Title key={`Title${i}`}>{el.title}</Title>
+                    </DropdownItem>
+                  ))
+                )}
               </Dropdown>
             )}
           </UserNavIconBox>

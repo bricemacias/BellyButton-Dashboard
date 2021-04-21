@@ -13,6 +13,7 @@ import { useMutation } from '@apollo/client';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../../logic/store';
 import talentsReducer from '../../../../logic/app/talentsReducer';
+import notificationsReducer from '../../../../logic/app/notificationsReducer';
 
 import { useToasts } from 'react-toast-notifications';
 
@@ -253,12 +254,19 @@ const Button = styled.button`
 interface TalentCardProps {
   key: string;
   data: any;
+  number: number;
 }
 
 const TalentCard = (props: TalentCardProps) => {
   const talents = useSelector((state: RootState) => state.talents.data);
+  const notifications: any = useSelector(
+    (state: RootState) => state.notifications.data
+  );
   const dispatch = useDispatch();
+  const notificationsDispatch = useDispatch();
   const updateTalents = talentsReducer.updateTalents;
+  const updateNotificationsData = notificationsReducer.updateNotificationsData;
+  const addNotifications = notificationsReducer.addNotifications;
 
   const { addToast } = useToasts();
   const [subscribersClick, setSubscribersClick] = useState<Boolean>(false);
@@ -482,6 +490,52 @@ const TalentCard = (props: TalentCardProps) => {
     if (!checkMonthSubscribers) fetchSubscribers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (updatedV30 === false) {
+      if (
+        !notifications.some((el: any) => {
+          console.log(el.title);
+          let element: any = el;
+          return (
+            element.title &&
+            element.title === `V30 of ${props.data.name} needs to be updated`
+          );
+        })
+      ) {
+        let updatedNotifications = [...notifications];
+        console.log(updatedNotifications);
+        notificationsDispatch(
+          addNotifications({
+            title: `V30 of ${props.data.name} needs to be updated`,
+            read: false,
+            type: 'V30Update',
+          })
+        );
+      }
+    } else {
+      if (
+        notifications.some(
+          (el: any) =>
+            el.title === `V30 of ${props.data.name} needs to be updated`
+        )
+      ) {
+        let updatedNotifications = [...notifications].filter((el: any) => {
+          if (el.title === `V30 of ${props.data.name} needs to be updated`) {
+            return false;
+          } else {
+            return true;
+          }
+        });
+        notificationsDispatch(updateNotificationsData(updatedNotifications));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updatedV30]);
+
+  useEffect(() => {
+    console.log('useEffect', notifications);
+  }, [notifications]);
 
   const [avatarLoaded, setAvatarLoaded] = useState(false);
   const avatar = (display: boolean) => (
