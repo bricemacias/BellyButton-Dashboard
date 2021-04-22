@@ -3,43 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // NOTIFICATIONS STATE
 const notificationsInitialState = {
   data: [],
-  // data: [
-  //   {
-  //     title: `V30 of AlphaDelta06 needs to be updated`,
-  //     read: false,
-  //     type: 'V30Update',
-  //     content: 'id'
-  //   },
-  //   {
-  //     title: 'V30 of Hit The Road needs to be updated',
-  //     read: false,
-  //     type: 'V30Update',
-  //   },
-  //   {
-  //     title: 'V30 of McSkyz needs to be updated',
-  //     read: false,
-  //     type: 'V30Update',
-  //   },
-  //   {
-  //     title: 'V30 of Jaymax VI needs to be updated',
-  //     read: false,
-  //     type: 'V30Update',
-  //   },
-  //   {
-  //     title: `V30 of Nam's needs to be updated`,
-  //     read: false,
-  //     type: 'V30Update',
-  //   },
-  // ],
+  v30ModalOpener: { name: '', openModal: false },
 };
-
-// const updateNotificationsData = createAsyncThunk(
-//   'users/fetchByIdStatus',
-//   async (data) => {
-//     const response = await userAPI.fetchById(userId);
-//     return response.data;
-//   }
-// );
 
 const notificationsState = createSlice({
   name: 'notifications',
@@ -52,14 +17,23 @@ const notificationsState = createSlice({
       //@ts-ignore
       state.data = [action.payload, ...state.data];
     },
+    updateV30ModalOpener: (state, action) => {
+      state.v30ModalOpener = action.payload;
+    },
   },
 });
 
 const {
   updateNotificationsData,
   addNotifications,
+  updateV30ModalOpener,
 } = notificationsState.actions;
 const reducer = notificationsState.reducer;
-const result = { reducer, updateNotificationsData, addNotifications };
+const result = {
+  reducer,
+  updateNotificationsData,
+  addNotifications,
+  updateV30ModalOpener,
+};
 
 export default result;

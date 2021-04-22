@@ -50,7 +50,7 @@ const Title = styled.div`
   font-size: 26px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: ${(p) => p.theme.colors.primary.main};
+  color: ${(p) => p.theme.colors.secondary.main};
 `;
 
 const SubTitle = styled.div`

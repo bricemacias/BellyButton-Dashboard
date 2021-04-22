@@ -262,6 +262,10 @@ const TalentCard = (props: TalentCardProps) => {
   const notifications: any = useSelector(
     (state: RootState) => state.notifications.data
   );
+  const v30ModalOpener = useSelector(
+    (state: RootState) => state.notifications.v30ModalOpener
+  );
+
   const dispatch = useDispatch();
   const notificationsDispatch = useDispatch();
   const updateTalents = talentsReducer.updateTalents;
@@ -271,6 +275,7 @@ const TalentCard = (props: TalentCardProps) => {
   const { addToast } = useToasts();
   const [subscribersClick, setSubscribersClick] = useState<Boolean>(false);
   const [v30Click, setV30Click] = useState<Boolean>(false);
+  const [openV30UpdateModal, setOpenV30UpdateModal] = useState<Boolean>(false);
 
   const [
     updateTalentSubscribers,
@@ -510,6 +515,7 @@ const TalentCard = (props: TalentCardProps) => {
             title: `V30 of ${props.data.name} needs to be updated`,
             read: false,
             type: 'V30Update',
+            talent: props.data.name,
           })
         );
       }
@@ -546,6 +552,28 @@ const TalentCard = (props: TalentCardProps) => {
       alt="Avatar"
     />
   );
+
+  useEffect(() => {
+    if (v30ModalOpener.name === props.data.name) {
+      if (v30ModalOpener.openModal === true) {
+        setV30Click(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v30ModalOpener]);
+
+  useEffect(() => {
+    if (openV30UpdateModal === false) {
+      if (v30ModalOpener.name === props.data.name) {
+        if (v30ModalOpener.openModal === false) {
+          setTimeout(function () {
+            setV30Click(false);
+          }, 1000);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v30ModalOpener]);
 
   return (
     <CardContainer>
@@ -604,6 +632,9 @@ const TalentCard = (props: TalentCardProps) => {
             // fetchv30={fetchV30}
             v30loading={loadingV30.toString()}
             v30error={v30Error}
+            setv30click={setV30Click}
+            openV30UpdateModal={openV30UpdateModal}
+            setOpenV30UpdateModal={setOpenV30UpdateModal}
           />
         ) : (
           <InformationSection>

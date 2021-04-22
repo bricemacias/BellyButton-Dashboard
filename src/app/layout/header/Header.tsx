@@ -36,6 +36,7 @@ import Search from '../../../components/Search';
 import Burger from '../../../components/Burger';
 import { RootState } from '../../../logic/store';
 import { motion } from 'framer-motion';
+import notificationsReducer from '../../../logic/app/notificationsReducer';
 
 interface HeaderProps extends RouteComponentProps {
   setOpen: () => void;
@@ -112,6 +113,7 @@ const DropdownItem = styled.div`
 
 const Header = ({ history, setOpen, open }: HeaderProps) => {
   const updateToken = authReducer.updateToken;
+  const updateV30ModalOpener = notificationsReducer.updateV30ModalOpener;
   const notifications = useSelector(
     (state: RootState) => state.notifications.data
   );
@@ -188,7 +190,13 @@ const Header = ({ history, setOpen, open }: HeaderProps) => {
                     <DropdownItem
                       key={`item${i}`}
                       onClick={() =>
-                        el.type === 'V30Update' && console.log('hola')
+                        el.type === 'V30Update' &&
+                        dispatch(
+                          updateV30ModalOpener({
+                            name: el.talent,
+                            openModal: true,
+                          })
+                        )
                       }
                     >
                       {!el.read && <ReadIcon key={`readicon${i}`} />}
