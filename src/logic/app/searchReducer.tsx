@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// AUTH STATE
+// SEARCH STATE
 const searchInitialState = {
   data: '',
 };

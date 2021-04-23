@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// AUTH STATE
+// TALENTS STATE
 const talentsInitialState = {
   data: [],
 };

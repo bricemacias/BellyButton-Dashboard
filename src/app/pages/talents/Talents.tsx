@@ -70,11 +70,11 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
       >
         {' '}
         {search.length > 0
-          ? searchTalents.map((el) => {
-              return <TalentCard key={el['_id']} data={el} />;
+          ? searchTalents.map((el, i) => {
+              return <TalentCard key={el['_id']} data={el} number={i} />;
             })
-          : talents.map((el) => {
-              return <TalentCard key={el['_id']} data={el} />;
+          : talents.map((el, i) => {
+              return <TalentCard key={el['_id']} data={el} number={i} />;
             })}
       </Container>
     </Opacity>
