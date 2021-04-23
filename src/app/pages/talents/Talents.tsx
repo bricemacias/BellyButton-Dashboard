@@ -9,6 +9,9 @@ import { ReactSVG } from 'react-svg';
 import plusSvg from '../../../assets/SVG/plus.svg';
 
 import TalentCard from './components/TalentCard';
+import AddTalent from './components/AddTalent';
+
+import ModalComponent from '../../../components/Modal';
 
 interface ContainerProps {
   height: number;
@@ -53,7 +56,7 @@ const AddTalentButton = styled.div<any>`
   border-radius: 50px;
   position: -webkit-sticky;
   position: sticky;
-  top: 20px;
+  top: 10px;
   margin-left: ${(p) => `${p.width - 75}px`};
   background-color: white;
   box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.3);
@@ -81,6 +84,7 @@ interface TalentsProps {
 const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
   const talents = useSelector((state: RootState) => state.talents.data);
   const [searchTalents, setSearchTalents] = useState([]);
+  const [openAddTalentModal, setOpenAddTalentModal] = useState<boolean>(false);
 
   const search = useSelector((state: RootState) => state.search.data);
 
@@ -112,6 +116,7 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
               ? windowSize.width
               : mainviewDimensions.width
           }
+          onClick={() => setOpenAddTalentModal(!openAddTalentModal)}
         >
           <PlusIcon src={plusSvg} />
         </AddTalentButton>
@@ -122,6 +127,12 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
           : talents.map((el, i) => {
               return <TalentCard key={el['_id']} data={el} number={i} />;
             })}
+        <ModalComponent
+          openModal={openAddTalentModal}
+          setOpenModal={setOpenAddTalentModal}
+        >
+          <AddTalent />
+        </ModalComponent>
       </Container>
     </Opacity>
   );
