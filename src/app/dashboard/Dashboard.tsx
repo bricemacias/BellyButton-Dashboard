@@ -79,7 +79,7 @@ const Dashboard = () => {
         width: mainviewRef.current.offsetWidth,
       });
     }
-  }, [windowSize.width]);
+  }, [windowSize.width, mainviewRef.current]);
 
   return (
     <OpacityScaleMain>

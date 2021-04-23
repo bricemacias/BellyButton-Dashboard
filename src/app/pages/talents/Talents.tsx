@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../logic/store';
 
+import { ReactSVG } from 'react-svg';
+import plusSvg from '../../../assets/SVG/plus.svg';
+
 import TalentCard from './components/TalentCard';
 
 interface ContainerProps {
@@ -14,6 +17,7 @@ interface ContainerProps {
 }
 
 const Container = styled.div<ContainerProps>`
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -33,6 +37,40 @@ const Container = styled.div<ContainerProps>`
   }
 
   overflow-y: scroll;
+`;
+
+const PlusIcon = styled(ReactSVG)`
+  transition: all 0.8s;
+  fill: ${(p) => p.theme.colors.grey.light4};
+  width: 25px;
+  height: 25px;
+`;
+
+const AddTalentButton = styled.div<any>`
+  transition: all 0.5s;
+  height: 40px;
+  width: 40px;
+  border-radius: 50px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
+  margin-left: ${(p) => `${p.width - 75}px`};
+  background-color: white;
+  box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.3);
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    height: 45px;
+    width: 45px;
+  }
+
+  &:hover ${PlusIcon} {
+    fill: ${(p) => p.theme.colors.secondary.main};
+  }
 `;
 
 interface TalentsProps {
@@ -68,7 +106,15 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
         width={mainviewDimensions.width}
         windowSize={windowSize}
       >
-        {' '}
+        <AddTalentButton
+          width={
+            windowSize.width < 1200
+              ? windowSize.width
+              : mainviewDimensions.width
+          }
+        >
+          <PlusIcon src={plusSvg} />
+        </AddTalentButton>
         {search.length > 0
           ? searchTalents.map((el, i) => {
               return <TalentCard key={el['_id']} data={el} number={i} />;
