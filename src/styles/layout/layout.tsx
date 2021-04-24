@@ -145,6 +145,7 @@ export const MainContent = styled.div`
 
 export const MainView = styled.main`
   background-color: transparent;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;

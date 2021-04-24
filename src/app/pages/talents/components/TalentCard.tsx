@@ -35,6 +35,7 @@ import { ReactSVG } from 'react-svg';
 
 const CardContainer = styled.div`
   display: flex;
+  transition: all 0.4s;
   justify-content: center;
   align-items: center;
   width: 400px;
