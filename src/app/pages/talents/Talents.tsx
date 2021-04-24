@@ -63,6 +63,11 @@ const AddTalentButton = styled.div<any>`
   margin-left: ${(p) => `${p.width - 75}px`}; */
   background-color: white;
   box-shadow: 0rem 1rem 3rem rgba(189, 189, 189, 0.3);
+  ${(p) => !p.open && 'box-shadow: 0rem 0rem 0rem rgba(189, 189, 189, 0.3)'};
+  /* box-shadow: ${(p) =>
+    p.open
+      ? '0rem 1rem 3rem rgba(189, 189, 189, 0.3)'
+      : '0rem 0rem 3rem rgba(189, 189, 189, 0.3)'}; */
   cursor: pointer;
 
   position: absolute;
@@ -168,6 +173,7 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
           }
           top={openButtonMenu ? 80 : null}
           onClick={() => setOpenAddTalentModal(!openAddTalentModal)}
+          open={openButtonMenu}
         >
           <div>New</div>
         </AddTalentButton>
@@ -179,6 +185,7 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
           }
           top={openButtonMenu ? 130 : null}
           onClick={() => setSortType(!sortType)}
+          open={openButtonMenu}
         >
           {sortType === false ? <div>Date</div> : <div>ABC</div>}
         </AddTalentButton>
@@ -190,6 +197,7 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
           }
           top={openButtonMenu ? 180 : null}
           onClick={() => setInverseSortDirection(!inverseSortDirection)}
+          open={openButtonMenu}
         >
           {inverseSortDirection === false ? <div>Up</div> : <div>Down</div>}
         </AddTalentButton>
@@ -200,7 +208,7 @@ const Talents = ({ mainviewDimensions, windowSize }: TalentsProps) => {
               : mainviewDimensions.width
           }
           onClick={() => setOpenButtonMenu(!openButtonMenu)}
-          // onClick={() => setOpenAddTalentModal(!openAddTalentModal)}
+          open={true}
         >
           <PlusIcon src={openButtonMenu ? listSvg : plusSvg} />
         </AddTalentButton>
