@@ -2,11 +2,13 @@
 // TODO : implement modal for updating V30
 // TODO: add button to update, if it has already been updated during the month, it will only change the value of the current month. If it has not been updated, it will change the most recent, and add a new element on the total vector for the actual month
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactSVG } from 'react-svg';
 import { Line } from '@reactchartjs/react-chart.js';
 import { DateTime, Info } from 'luxon';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useToasts } from 'react-toast-notifications';
 
@@ -19,6 +21,8 @@ import chevronLeftSvg from '../../../../assets/SVG/chevron-left.svg';
 import hourGlassSvg from '../../../../assets/SVG/hour-glass.svg';
 // import warningSvg from '../../../../assets/SVG/warning.svg';
 import cycleSvg from '../../../../assets/SVG/cycle.svg';
+import { RootState } from '../../../../logic/store';
+import notificationsReducer from '../../../../logic/app/notificationsReducer';
 
 const V30Container = styled.div`
   background-color: transparent;
@@ -105,15 +109,41 @@ interface V30ElementProps {
 }
 
 const V30 = (props: any) => {
-  const [openModal, setOpenModal] = useState(false);
-
   const { addToast } = useToasts();
+
+  const v30ModalOpener = useSelector(
+    (state: RootState) => state.notifications.v30ModalOpener
+  );
+  const dispatch = useDispatch();
+  const updateV30ModalOpener = notificationsReducer.updateV30ModalOpener;
 
   // const checkDayV30 = props.data.v30.some((el: any) => {
   //   return DateTime.fromISO(el.date).hasSame(nowDate, 'day');
   // });
 
   const NowTime = DateTime.now();
+
+  // useEffect qui set openModal en fonction d'un redux qu'il reçoit.si le redux contient le nom du talent et qu'il est set à true, alors open modal se set a true.
+
+  useEffect(() => {
+    if (v30ModalOpener.name === props.data.name) {
+      if (v30ModalOpener.openModal === true) {
+        props.setOpenV30UpdateModal(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [v30ModalOpener]);
+
+  useEffect(() => {
+    if (props.openV30UpdateModal === false) {
+      if (v30ModalOpener.name === props.data.name) {
+        dispatch(
+          updateV30ModalOpener({ name: props.data.name, openModal: false })
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.openV30UpdateModal]);
 
   const data = {
     labels: props.data.v30
@@ -291,7 +321,7 @@ const V30 = (props: any) => {
               update={'true'}
               isloading={'false'}
               onClick={() => {
-                setOpenModal(true);
+                props.setOpenV30UpdateModal(true);
               }}
               src={cycleSvg}
             />
@@ -324,11 +354,14 @@ const V30 = (props: any) => {
       ) : (
         <NewTalent />
       )}
-      <ModalComponent openModal={openModal} setOpenModal={setOpenModal}>
+      <ModalComponent
+        openModal={props.openV30UpdateModal}
+        setOpenModal={props.setOpenV30UpdateModal}
+      >
         <UpdateV30
           {...props}
           updatev30={updateV30}
-          setopenmodal={setOpenModal}
+          setopenmodal={props.setOspenV30UpdateModal}
         />
       </ModalComponent>
     </V30Container>

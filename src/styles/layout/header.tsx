@@ -64,6 +64,7 @@ export const UserNavNotification = styled.span`
 `;
 
 export const UserNavUser = styled.div`
+  position: relative;
   @media only screen and (max-width: ${(p) => p.theme.screen.smallest}) {
     order: 1;
   }

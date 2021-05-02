@@ -39,6 +39,7 @@ const Container = styled.div`
 const TitleSection = styled.div`
   display: flex;
   height: 50px;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -49,7 +50,14 @@ const Title = styled.div`
   font-size: 26px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: ${(p) => p.theme.colors.primary.main};
+  color: ${(p) => p.theme.colors.secondary.main};
+`;
+
+const SubTitle = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: ${(p) => p.theme.colors.secondary.pink};
 `;
 
 const VideoButtonsContainer = styled.div`
@@ -230,7 +238,8 @@ const UpdateV30 = (props: any) => {
   return (
     <MainContainer>
       <TitleSection>
-        <Title>UpdateV30</Title>
+        <Title>{props.data.name}</Title>
+        <SubTitle>V30 calculator</SubTitle>
       </TitleSection>
       <Form>
         {videos.map((el: any) => {
