@@ -35,6 +35,7 @@ import { ReactSVG } from 'react-svg';
 
 const CardContainer = styled.div`
   display: flex;
+  transition: all 0.4s;
   justify-content: center;
   align-items: center;
   width: 400px;
@@ -271,6 +272,7 @@ const TalentCard = (props: TalentCardProps) => {
   const updateTalents = talentsReducer.updateTalents;
   const updateNotificationsData = notificationsReducer.updateNotificationsData;
   const addNotifications = notificationsReducer.addNotifications;
+  const updateV30ModalOpener = notificationsReducer.updateV30ModalOpener;
 
   const { addToast } = useToasts();
   const [subscribersClick, setSubscribersClick] = useState<Boolean>(false);
@@ -568,6 +570,7 @@ const TalentCard = (props: TalentCardProps) => {
         if (v30ModalOpener.openModal === false) {
           setTimeout(function () {
             setV30Click(false);
+            dispatch(updateV30ModalOpener({ name: '', openModal: 'false' }));
           }, 1000);
         }
       }
